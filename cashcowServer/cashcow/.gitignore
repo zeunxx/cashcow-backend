@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### empty directory
+!controller/.keep
+!service/.keep
+!repositoru/.keep
+!domain/.keep
+!dto/.keep
