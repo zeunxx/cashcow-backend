@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오픈뱅킹 사용자인증</title>
+    <script>
+        function authBtnClick(){
+            var tmpWindow = window.open()
+            tmpWindow.location ="https://testapi.openbanking.or.kr/oauth/2.0/authorize?"+
+                "response_type=code&"+
+                "client_id=e947261f-0a95-438f-8593-3379abf7c182&"+
+                "redirect_uri=http://localhost:8090/callback&"+
+                "scope=login inquiry transfer&"+
+                "state=12345678901234567890123456789012&"+
+                "auth_type=0"
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+
+
+
+<button type="button" id="authBtn" name="authBtn" onclick="authBtnClick()">인증받기</button>
+
+
+
+
+</body>
+</html>
