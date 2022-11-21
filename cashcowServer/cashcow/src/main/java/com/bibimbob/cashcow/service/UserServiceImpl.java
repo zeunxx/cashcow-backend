@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,6 +33,14 @@ public class UserServiceImpl implements UserService{
                         .refreshToken(userDto.getRefreshToken())
                         .userseqno(userDto.getUserseqno()).build());
         return savedUser;
+    }
+
+    @Override
+    public UserDto getUser(long id) throws Exception {
+        User user = userRepository.findById(id).orElseThrow(()->
+        new Exception("해당 사용자가 존재하지 않습니다. : "+id));
+        UserDto userDto = new UserDto(user);
+        return userDto;
     }
 
 

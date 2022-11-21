@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto;
+package com.bibimbob.cashcow.dto.openbanking;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
