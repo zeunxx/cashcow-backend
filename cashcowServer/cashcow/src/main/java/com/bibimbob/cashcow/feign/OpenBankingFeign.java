@@ -1,10 +1,9 @@
 package com.bibimbob.cashcow.feign;
 
-import com.bibimbob.cashcow.dto.AccountBalanceDto;
-import com.bibimbob.cashcow.dto.AccountListDto;
-import com.bibimbob.cashcow.dto.TokenResponseDto;
-import com.bibimbob.cashcow.dto.TransactionListDto;
-import org.hibernate.Transaction;
+import com.bibimbob.cashcow.dto.openbanking.AccountBalanceDto;
+import com.bibimbob.cashcow.dto.openbanking.AccountListDto;
+import com.bibimbob.cashcow.dto.openbanking.TokenResponseDto;
+import com.bibimbob.cashcow.dto.openbanking.TransactionListDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

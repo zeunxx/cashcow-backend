@@ -5,4 +5,5 @@ import com.bibimbob.cashcow.dto.UserDto;
 
 public interface UserService {
     public User save(UserDto userDto) throws Exception;
+    public UserDto getUser(long id) throws Exception;
 }

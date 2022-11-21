@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
-@Table(name="user")
+@Table(name="User")
 @Getter
 public class User implements Serializable {
 
