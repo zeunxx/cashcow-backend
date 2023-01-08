@@ -1,9 +1,12 @@
 package com.bibimbob.cashcow.service;
 
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.dto.UserAssetsDto;
 import com.bibimbob.cashcow.dto.UserDto;
 
 public interface UserService {
-    public User save(UserDto userDto) throws Exception;
-    public UserDto getUser(long id) throws Exception;
+    public Long save(User user) throws Exception;
+    public User findOne(long id) throws Exception;
+
+    public Long updateAssets(Long assetsId, UserAssetsDto userAssetsDto) throws Exception;
 }

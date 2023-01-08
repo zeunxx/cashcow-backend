@@ -1,11 +1,15 @@
 package com.bibimbob.cashcow.dto;
 
+import com.bibimbob.cashcow.domain.GENDER;
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.domain.UserAssets;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -21,24 +25,22 @@ public class UserDto {
     @ApiModelProperty(value = "유저 닉네임")
     private String nickname;
     @ApiModelProperty(value = "유저 성별")
-    private String gender;
+    private GENDER gender;
     @ApiModelProperty(value = "유저 직업")
     private String job;
     @ApiModelProperty(value = "유저 상태")
     private String status;
     @ApiModelProperty(value = "유저 정보 생성날짜")
-    private String createdAt;
+    private LocalDateTime createdAt;
     @ApiModelProperty(value = "유저 정보 수정날짜")
-    private String modifiedAt;
+    private LocalDateTime modifiedAt;
     @ApiModelProperty(value = "유저 핸드폰 번호")
     private String phoneNumber;
-    @ApiModelProperty(value = "유저 오픈 뱅킹 접근위한 ACCESS TOKEN")
-    private String accessToken;
-    @ApiModelProperty(value = "유저 오픈뱅킹 REFRESH TOKEN ")
-    private String refreshToken;
-    @ApiModelProperty(value = "유저 오픈뱅킹 USER SEQ NO")
-    private String userseqno;
 
+    private UserAssets userAsset;
+
+
+    //== 생성 메소드==//
     public UserDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
@@ -47,11 +49,22 @@ public class UserDto {
         this.gender = user.getGender();
         this.job = user.getJob();
         this.status = user.getStatus();
-        this.createdAt = user.getCreatedAt();
-        this.modifiedAt = user.getModifiedAt();
+//        this.createdAt = user.getCreatedAt();
+//        this.modifiedAt = user.getModifiedAt();
         this.phoneNumber = user.getPhoneNumber();
-        this.accessToken = user.getAccessToken();
-        this.refreshToken = user.getRefreshToken();
-        this.userseqno = user.getUserseqno();
+        this.userAsset = user.getUserAsset();
+    }
+
+    public User toEntity(){
+        return User.builder()
+                .name(name)
+                .password(password)
+                .nickname(nickname)
+                .gender(gender)
+                .job(job)
+                .status(status)
+                .phoneNumber(phoneNumber)
+                .userAsset(userAsset)
+                .build();
     }
 }

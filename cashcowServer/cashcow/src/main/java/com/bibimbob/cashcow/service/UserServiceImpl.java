@@ -1,6 +1,8 @@
 package com.bibimbob.cashcow.service;
 
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.domain.UserAssets;
+import com.bibimbob.cashcow.dto.UserAssetsDto;
 import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+
+import static java.time.LocalDateTime.now;
 
 @Service
 @Transactional
@@ -17,31 +21,25 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public User save(UserDto userDto) throws Exception {
-        User savedUser = userRepository.save(User.builder()
-                        .id(userDto.getId())
-                        .name(userDto.getName())
-                        .password(userDto.getPassword())
-                        .nickname(userDto.getNickname())
-                        .gender(userDto.getGender())
-                        .job(userDto.getJob())
-                        .status(userDto.getStatus())
-                        .createdAt(userDto.getCreatedAt())
-                        .modifiedAt(userDto.getModifiedAt())
-                        .phoneNumber(userDto.getPhoneNumber())
-                        .accessToken(userDto.getAccessToken())
-                        .refreshToken(userDto.getRefreshToken())
-                        .userseqno(userDto.getUserseqno()).build());
-        return savedUser;
+    public Long save(User user) throws Exception {
+        userRepository.save(user);
+        return user.getId();
     }
 
     @Override
-    public UserDto getUser(long id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(()->
-        new Exception("해당 사용자가 존재하지 않습니다. : "+id));
-        UserDto userDto = new UserDto(user);
-        return userDto;
+    public User findOne(long id) throws Exception {
+        User user = userRepository.findOne(id);
+        return user;
     }
 
+    @Override
+    @Transactional
+    public Long updateAssets(Long assetsId, UserAssetsDto userAssetsDto) throws Exception {
+        UserAssets findAssets = userRepository.findOneAssets(assetsId);
 
+        findAssets.change(userAssetsDto.getTotalHoldings(),
+                userAssetsDto.getSalary(),
+                userAssetsDto.getGoalAmount());
+        return findAssets.getId();
+    }
 }

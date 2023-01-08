@@ -1,20 +1,25 @@
 package com.bibimbob.cashcow.domain;
 
+import com.bibimbob.cashcow.dto.UserDto;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @Getter
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column (name="user_id")
     private long id;
 
     @Column (nullable = false)
@@ -27,7 +32,8 @@ public class User implements Serializable {
     private String nickname;
 
     @Column (nullable = false)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private GENDER gender;
 
     @Column (nullable = false)
     private String job;
@@ -35,40 +41,32 @@ public class User implements Serializable {
     @Column (nullable = false)
     private String status;
 
-    @Column (nullable = false)
-    private String createdAt;
+//    @Column (name="created_at")
+//    private LocalDateTime createdAt;
+//
+//    @Column (name="modified_at")
+//    private LocalDateTime modifiedAt;
 
-    @Column (nullable = false)
-    private String modifiedAt;
-
-    @Column (nullable = false)
+    @Column (nullable = false,name="phone_number")
     private String phoneNumber;
 
-    @Column (nullable = false)
-    private String accessToken;
-
-    @Column (nullable = false)
-    private String refreshToken;
-
-    @Column (nullable = false)
-    private String userseqno;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_assets_id")
+    private UserAssets userAsset;
 
 
+    //== 생성 메소드 ==//
     @Builder
-    public User(long id, String password, String name, String nickname, String gender, String job, String status, String createdAt, String modifiedAt, String phoneNumber, String accessToken, String refreshToken, String userseqno) {
-        this.id = id;
+    public User(String password, String name, String nickname, GENDER gender, String job, String status, LocalDateTime createdAt, LocalDateTime modifiedAt, String phoneNumber,UserAssets userAsset) {
         this.password = password;
         this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.job = job;
         this.status = status;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+//        this.createdAt = createdAt;
+//        this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.userseqno = userseqno;
+        this.userAsset = userAsset;
     }
-
 }
