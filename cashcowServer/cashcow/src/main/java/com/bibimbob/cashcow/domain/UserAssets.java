@@ -25,11 +25,11 @@ public class UserAssets {
     @Column(name="goal_amount")
     private Long goalAmount;
 
-//    @Column(name="created_at")
-//    private LocalDateTime createdAt;
-//
-//    @Column (name="modified_at")
-//    private LocalDateTime modifiedAt;
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @Column (name="modified_at")
+    private LocalDateTime modifiedAt;
 
     //== 생성 메소드==//
     @Builder
@@ -37,14 +37,16 @@ public class UserAssets {
         this.totalHoldings = totalHoldings;
         this.salary = salary;
         this.goalAmount = goalAmount;
-//        this.createdAt = createdAt;
-//        this.modifiedAt = modifiedAt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
-    public void change(long totalHoldings, long salary, long goalAmount){
+    //== 유저 자산 정보 변경 ==// (setter 대신)
+    public void change(long totalHoldings, long salary, long goalAmount, LocalDateTime modifiedAt){
         this.totalHoldings = totalHoldings;
         this.salary = salary;
         this.goalAmount = goalAmount;
+        this.modifiedAt = modifiedAt;
     }
 
 }

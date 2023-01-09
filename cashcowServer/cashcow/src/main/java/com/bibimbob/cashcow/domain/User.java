@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @Getter
+//@DynamicInsert // insert시 null값 제외하고 DB INSERT
+//@DynamicUpdate // update시 null값 제외하고 DB UPDATE
 public class User implements Serializable {
 
     @Id
@@ -41,11 +45,11 @@ public class User implements Serializable {
     @Column (nullable = false)
     private String status;
 
-//    @Column (name="created_at")
-//    private LocalDateTime createdAt;
-//
-//    @Column (name="modified_at")
-//    private LocalDateTime modifiedAt;
+    @Column (name="created_at")
+    private LocalDateTime createdAt;
+
+    @Column (name="modified_at")
+    private LocalDateTime modifiedAt;
 
     @Column (nullable = false,name="phone_number")
     private String phoneNumber;
@@ -64,9 +68,21 @@ public class User implements Serializable {
         this.gender = gender;
         this.job = job;
         this.status = status;
-//        this.createdAt = createdAt;
-//        this.modifiedAt = modifiedAt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.userAsset = userAsset;
+    }
+
+    //== 유저 정보 변경 ==// (setter 대신)
+    public void change(String password, String name, String nickname, GENDER gender, String job, String status, LocalDateTime modifiedAt, String phoneNumber) {
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.job = job;
+        this.status = status;
+        this.modifiedAt = modifiedAt;
+        this.phoneNumber = phoneNumber;
     }
 }

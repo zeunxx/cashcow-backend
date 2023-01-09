@@ -5,6 +5,7 @@ import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.domain.UserAssets;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,10 +50,20 @@ public class UserDto {
         this.gender = user.getGender();
         this.job = user.getJob();
         this.status = user.getStatus();
-//        this.createdAt = user.getCreatedAt();
-//        this.modifiedAt = user.getModifiedAt();
+        this.createdAt = user.getCreatedAt();
+        this.modifiedAt = user.getModifiedAt();
         this.phoneNumber = user.getPhoneNumber();
         this.userAsset = user.getUserAsset();
+    }
+
+    public UserDto(String name, String password, String nickname, GENDER gender, String job, String status, String phoneNumber) {
+        this.name = name;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.job = job;
+        this.status = status;
+        this.phoneNumber = phoneNumber;
     }
 
     public User toEntity(){

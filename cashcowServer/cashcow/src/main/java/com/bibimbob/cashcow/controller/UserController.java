@@ -42,4 +42,12 @@ public class UserController {
         User user = userService.findOne(id);
         userService.updateAssets(user.getUserAsset().getId(), userAssetsDto);
     }
+
+    // 유저 정보 update
+    @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
+    @PostMapping("/updateUser/{userId}")
+    public void updateUser(@PathVariable("userId") Long id, UserDto userDto) throws Exception{
+        User user = userService.findOne(id);
+        userService.updateUser(user.getUserAsset().getId(), userDto);
+    }
 }
