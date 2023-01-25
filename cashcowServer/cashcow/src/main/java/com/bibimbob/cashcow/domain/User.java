@@ -1,14 +1,18 @@
 package com.bibimbob.cashcow.domain;
 
+import com.bibimbob.cashcow.domain.UserAssets.UserAssets;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @Getter
 public class User implements Serializable {
@@ -16,6 +20,12 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name="user_id", nullable = false)
+    private String userId;
+
+    @Column (nullable = false)
+    private LocalDate birth;
 
     @Column (nullable = false)
     private String password;
@@ -27,48 +37,68 @@ public class User implements Serializable {
     private String nickname;
 
     @Column (nullable = false)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private GENDER gender;
 
     @Column (nullable = false)
     private String job;
 
     @Column (nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private STATUS status;
 
-    @Column (nullable = false)
-    private String createdAt;
+    @Column (name="created_at")
+    private LocalDateTime createdAt;
 
-    @Column (nullable = false)
-    private String modifiedAt;
+    @Column (name="modified_at")
+    private LocalDateTime modifiedAt;
 
-    @Column (nullable = false)
+    @Column (nullable = false,name="phone_number")
     private String phoneNumber;
 
     @Column (nullable = false)
-    private String accessToken;
+    private Long salary;
 
-    @Column (nullable = false)
-    private String refreshToken;
-
-    @Column (nullable = false)
-    private String userseqno;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_assets_id")
+//    private UserAssets userAsset;
 
 
-    @Builder
-    public User(long id, String password, String name, String nickname, String gender, String job, String status, String createdAt, String modifiedAt, String phoneNumber, String accessToken, String refreshToken, String userseqno) {
-        this.id = id;
+
+
+    //== 생성 메소드 ==//
+
+    public User( String userId, LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status, LocalDateTime modifiedAt, String phoneNumber, long salary) {
+        this.userId = userId;
+        this.birth = birth;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.job = job;
         this.status = status;
-        this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.userseqno = userseqno;
+        this.salary = salary;
+//        this.userAsset = userAsset;
     }
 
+    //== 유저 정보 변경 ==// (setter 대신)
+    public void change(String userId, LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status, LocalDateTime modifiedAt, String phoneNumber, Long salary) {
+        this.userId = userId;
+        this.birth = birth;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.job = job;
+        this.status = status;
+        this.modifiedAt = modifiedAt;
+        this.phoneNumber = phoneNumber;
+        this.salary = salary;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

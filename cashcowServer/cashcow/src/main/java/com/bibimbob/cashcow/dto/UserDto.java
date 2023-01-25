@@ -1,19 +1,28 @@
 package com.bibimbob.cashcow.dto;
 
+import com.bibimbob.cashcow.domain.GENDER;
+import com.bibimbob.cashcow.domain.STATUS;
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.domain.UserAssets.UserAssets;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @Getter
-@Setter
 @ApiModel(value = "유저 정보", description = "유저 정보를 가진 Domain Class")
 public class UserDto {
     @ApiModelProperty(value = "유저 코드")
     private long id;
+
+    @ApiModelProperty(value = "유저 아이디")
+    private String userId;
     @ApiModelProperty(value = "유저 이름")
     private String name;
     @ApiModelProperty(value = "유저 비밀번호")
@@ -21,26 +30,31 @@ public class UserDto {
     @ApiModelProperty(value = "유저 닉네임")
     private String nickname;
     @ApiModelProperty(value = "유저 성별")
-    private String gender;
+    private GENDER gender;
     @ApiModelProperty(value = "유저 직업")
     private String job;
     @ApiModelProperty(value = "유저 상태")
-    private String status;
+    private STATUS status;
     @ApiModelProperty(value = "유저 정보 생성날짜")
-    private String createdAt;
+    private LocalDateTime createdAt;
     @ApiModelProperty(value = "유저 정보 수정날짜")
-    private String modifiedAt;
+    private LocalDateTime modifiedAt;
     @ApiModelProperty(value = "유저 핸드폰 번호")
     private String phoneNumber;
-    @ApiModelProperty(value = "유저 오픈 뱅킹 접근위한 ACCESS TOKEN")
-    private String accessToken;
-    @ApiModelProperty(value = "유저 오픈뱅킹 REFRESH TOKEN ")
-    private String refreshToken;
-    @ApiModelProperty(value = "유저 오픈뱅킹 USER SEQ NO")
-    private String userseqno;
+    @ApiModelProperty(value = "유저 생년월일")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+    private LocalDate birth;
+    @ApiModelProperty(value = "유저 연봉")
+    private Long salary;
 
+//    private UserAssets userAsset;
+
+
+    //== 생성 메소드==//
     public UserDto(User user) {
         this.id = user.getId();
+        this.userId = user.getUserId();
+        this.birth = user.getBirth();
         this.name = user.getName();
         this.password = user.getPassword();
         this.nickname = user.getNickname();
@@ -50,8 +64,33 @@ public class UserDto {
         this.createdAt = user.getCreatedAt();
         this.modifiedAt = user.getModifiedAt();
         this.phoneNumber = user.getPhoneNumber();
-        this.accessToken = user.getAccessToken();
-        this.refreshToken = user.getRefreshToken();
-        this.userseqno = user.getUserseqno();
+        this.salary = user.getSalary();
+
+    }
+
+    public UserDto(String userId, String name, String password, String nickname, GENDER gender, String job, STATUS status, LocalDateTime modifiedAt, String phoneNumber, LocalDate birth, long salary) {
+        this.userId = userId;
+        this.name = name;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.job = job;
+        this.status = status;
+        this.modifiedAt = modifiedAt;
+        this.phoneNumber = phoneNumber;
+        this.birth = birth;
+        this.salary = salary;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public User toEntity(){
+        return new User(userId, birth, password, name, nickname, gender, job, status, modifiedAt, phoneNumber, salary);
     }
 }
