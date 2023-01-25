@@ -1,9 +1,8 @@
 package com.bibimbob.cashcow.service;
 
 import com.bibimbob.cashcow.domain.GENDER;
+import com.bibimbob.cashcow.domain.STATUS;
 import com.bibimbob.cashcow.domain.User;
-import com.bibimbob.cashcow.domain.UserAssets;
-import com.bibimbob.cashcow.dto.UserAssetsDto;
 import com.bibimbob.cashcow.dto.UserDto;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,13 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static java.time.LocalDateTime.now;
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,38 +29,26 @@ public class UserServiceTest {
     EntityManager em;
 
     @Test
-    public void 회원_조회() throws Exception{
+    public void user_show() throws Exception{
         //given
-        Long userId = 1L;
+        Long userId = 3L;
 
         //when
         User user = userService.findOne(userId);
 
         //then
-        Assert.assertEquals(1,user.getId());
+        System.out.println(user.getName());
+        Assert.assertEquals(3,user.getId());
     }
 
     @Test
-    @Rollback(false)
-    public void 회원_가입() throws Exception{
+//    @Rollback(false)
+    public void user_join() throws Exception{
         //given
 
-        /**
-         * 자산 정보 안넣고 회원 가입 성공
-          */
-        UserAssets userAsset = UserAssets.builder().build();
-        User user = User.builder().name("가입 테스트").gender(GENDER.FEMALE).phoneNumber("00").password("12")
-                .job("st").status("none").nickname("zeun").createdAt(now()).modifiedAt(now()).userAsset(userAsset)
-                .build();
+        UserDto userDto = new UserDto("1/21 새로 생성","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,now(),"00",LocalDate.of(1999, 10, 9),3000L);
 
-
-        /**
-         * 자산 정보 넣고 회원 가입
-         */
-        UserAssets userAsset2 = new UserAssets(100,100,100,now(),now());
-        User user2 = User.builder().name("test2").gender(GENDER.FEMALE).phoneNumber("00").password("12")
-                .job("st").status("none").nickname("zeun").userAsset(userAsset2)
-                .build();
+        User user = userDto.toEntity();
 
         //when
         Long savedId = userService.save(user);
@@ -76,45 +60,18 @@ public class UserServiceTest {
     }
 
     @Test
-    @Rollback(false)
-    public void 회원_정보_수정() throws Exception{
+//    @Rollback(false)
+    public void user_update() throws Exception{
         //given
-        UserDto userDto = new UserDto("가입 변경", "1234", "변경", GENDER.FEMALE, "student", "modified", "01012341234");
+        UserDto userDto = new UserDto("아이디","변경된 이름","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE, now(), "00", LocalDate.of(1999, 10, 9), 3000L);
 
-        //when
-        Long assetId = userService.updateUser(6L, userDto);
+//        //when
+        Long assetId = userService.updateUser(3L, userDto);
 
         //then
-        Assert.assertEquals("가입 변경", userService.findOne(6).getName());
+        Assert.assertEquals("변경된 이름", userService.findOne(3L).getName());
     }
 
-    @Test
-    @Rollback(false)
-    public void 유저_자산_추가입력_수정() throws Exception{
-        //given
-        UserAssetsDto userAssetsDto = new UserAssetsDto(100,200,300);
 
-        //when
-        Long assetId = userService.updateAssets(6L, userAssetsDto);
-
-        //then
-        Long wantTotal = userService.findOne(6L).getUserAsset().getTotalHoldings();
-        Long realTotal = userAssetsDto.getTotalHoldings();
-        Assert.assertEquals(realTotal, wantTotal);
-    }
-
-    @Test // 이건 팀원들 의견 물어보고
-    public void 유저_자산_null입력() throws Exception{
-        //given
-        UserAssetsDto userAssetsDto = new UserAssetsDto(100,200,300);
-
-        //when
-        Long assetId = userService.updateAssets(2L, userAssetsDto);
-
-        //then
-        Long wantTotal = userService.findOne(2L).getUserAsset().getTotalHoldings();
-        Long realTotal = userAssetsDto.getTotalHoldings();
-        Assert.assertEquals(realTotal, wantTotal);
-    }
 
 }
