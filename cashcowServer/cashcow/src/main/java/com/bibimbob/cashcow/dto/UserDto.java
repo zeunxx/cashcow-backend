@@ -3,7 +3,6 @@ package com.bibimbob.cashcow.dto;
 import com.bibimbob.cashcow.domain.GENDER;
 import com.bibimbob.cashcow.domain.STATUS;
 import com.bibimbob.cashcow.domain.User;
-import com.bibimbob.cashcow.domain.UserAssets.UserAssets;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -92,5 +91,24 @@ public class UserDto {
 
     public User toEntity(){
         return new User(userId, birth, password, name, nickname, gender, job, status, modifiedAt, phoneNumber, salary);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", gender=" + gender +
+                ", job='" + job + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birth=" + birth +
+                ", salary=" + salary +
+                '}';
     }
 }

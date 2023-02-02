@@ -1,8 +1,7 @@
-package com.bibimbob.cashcow.dto.ChatBotDto;
+package com.bibimbob.cashcow.dto.ChatBotRequestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor

@@ -1,12 +1,17 @@
 package com.bibimbob.cashcow.service;
 
+import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
 import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -36,36 +41,13 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
-    /**
-     * 유저 자산 정보 저장
-     */
-//    @Override
-//    public Long updateAssets(Long assetsId,int temp ,UserAssetsDto userAssetsDto) throws Exception {
-//        UserAssets findAssets = userRepository.findOneAssets(assetsId);
-//        userRepository.saveAsset();
-//        return findAssets.getId();
-//    }
-
-    /**
-     * 유저 자산 정보 수정
-     */
-//    @Override
-//    public Long updateAssets(Long assetsId,int temp ,UserAssetsDto userAssetsDto) throws Exception {
-//        UserAssets findAssets = userRepository.findOneAssets(assetsId);
-//
-//        findAssets.change(userAssetsDto.getTotalHoldings(),
-//                userAssetsDto.getSalary(),
-//                userAssetsDto.getGoalAmount(),
-//                now());
-//        return findAssets.getId();
-//    }
 
     /**
      * 유저 정보 수정
      */
     @Override
-    public Long updateUser(Long userId, UserDto userDto) throws Exception {
-        User findUser = userRepository.findOne(userId);
+    public Long updateUser(UserDto userDto) throws Exception {
+        User findUser = userRepository.findOne(userDto.getId());
 
         findUser.change(
         userDto.getUserId(),
@@ -82,4 +64,52 @@ public class UserServiceImpl implements UserService{
 
         return findUser.getId();
     }
+
+    /**
+     * 주식 즐겨찾기 save
+     */
+    @Override
+    public Long saveStock(UserStockDto userStockDto) throws Exception {
+        User findUser = userRepository.findOne(userStockDto.getId());
+
+        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getId(), userStockDto.getStockCode());
+
+        if (oneStock.size() == 0) {
+            FavoriteStock favoriteStock = new FavoriteStock(findUser, userStockDto.getStockCode());
+            userRepository.saveStock(favoriteStock);
+        }
+
+
+        return findUser.getId();
+    }
+
+    /**
+     * 주식 즐겨찾기 remove
+     */
+    @Override
+    public Long removeStock(UserStockDto userStockDto) throws Exception {
+        User findUser = userRepository.findOne(userStockDto.getId());
+
+        // db에서 해당 엔티티 찾아서 있으면 delete
+        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getId(), userStockDto.getStockCode());
+
+        if(oneStock.size()>=1){
+            userRepository.removeStock(oneStock.get(0));
+            return oneStock.get(0).getId();
+        }
+
+        return 0L;
+    }
+
+    /**
+     *  주식 즐겨찾기 get
+     */
+    @Override
+    public List<FavoriteStock> getStockList(Long userId) throws Exception {
+        List<FavoriteStock> stockList = userRepository.findStockList(userId);
+        return stockList;
+    }
+
+
+
 }

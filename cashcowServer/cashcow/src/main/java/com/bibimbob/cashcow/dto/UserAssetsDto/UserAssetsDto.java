@@ -22,4 +22,12 @@ public abstract class UserAssetsDto {
         this.expectedPeriod = expectedPeriod;
         this.savingAmount = savingAmount;
     }
+
+    @Override
+    public String toString() {
+        return "UserAssetsDto{" +
+                "expectedPeriod=" + expectedPeriod +
+                ", savingAmount=" + savingAmount +
+                '}';
+    }
 }

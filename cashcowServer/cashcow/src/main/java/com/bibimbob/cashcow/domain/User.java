@@ -1,6 +1,6 @@
 package com.bibimbob.cashcow.domain;
 
-import com.bibimbob.cashcow.domain.UserAssets.UserAssets;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="User")
 @Getter
 public class User implements Serializable {
 
@@ -59,11 +58,6 @@ public class User implements Serializable {
     @Column (nullable = false)
     private Long salary;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_assets_id")
-//    private UserAssets userAsset;
-
-
 
 
     //== 생성 메소드 ==//
@@ -80,7 +74,6 @@ public class User implements Serializable {
         this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
-//        this.userAsset = userAsset;
     }
 
     //== 유저 정보 변경 ==// (setter 대신)
