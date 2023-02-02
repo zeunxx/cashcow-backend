@@ -2,6 +2,7 @@ package com.bibimbob.cashcow.dto.UserAssetsDto;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel(value = "유저 자산 예금 정보", description = "유저 자산 예금 정보를 가진 Domain Class")
 public class DepositDto extends UserAssetsDto{
-    public DepositDto(Long expectedPeriod, Long savingAmount) {
+
+    @ApiModelProperty(value = "유저 PK")
+    private Long id;
+    public DepositDto(Long expectedPeriod, Long savingAmount, long id) {
         super(expectedPeriod, savingAmount);
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

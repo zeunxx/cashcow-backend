@@ -15,11 +15,14 @@ import javax.persistence.Column;
 @ApiModel(value = "유저 자산 적금 정보", description = "유저 자산 적금 정보를 가진 Domain Class")
 public class SavingDto extends UserAssetsDto{
 
+    @ApiModelProperty(value = "유저 PK")
+    private Long id;
     @ApiModelProperty(value = "월 저축 금액")
     private Long monthlyPayment;
 
-    public SavingDto(Long expectedPeriod, Long savingAmount, Long monthlyPayment) {
+    public SavingDto(Long expectedPeriod, Long savingAmount, Long monthlyPayment, long id) {
         super(expectedPeriod, savingAmount);
         this.monthlyPayment = monthlyPayment;
+        this.id = id;
     }
 }
