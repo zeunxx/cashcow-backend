@@ -1,6 +1,8 @@
 package com.bibimbob.cashcow.controller;
 
+import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
 import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.dto.UserResponseDto.ResponseSaveDto;
@@ -9,6 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -24,18 +28,17 @@ public class UserController {
     @ApiOperation(value = "회원 가입", notes = "유저 정보를 입력받아 회원 DB에 저장하는 API입니다.")
     @PostMapping("/join")
     public ResponseSaveDto join(@RequestBody UserDto userDto) throws Exception{
-        // dto to entity
-        userDto.setCreatedAt(now());
-        userDto.setModifiedAt(now());
+        // dto -> entity
         User user = userDto.toEntity();
 
 
         try{
             userService.save(user);
-        }catch(Exception e){
+        }catch(IllegalStateException e){
             ResponseSaveDto responseSaveDto = new ResponseSaveDto(0L);
             return responseSaveDto;
         }
+
         ResponseSaveDto responseSaveDto = new ResponseSaveDto(user.getId());
         return responseSaveDto;
     }
@@ -44,41 +47,49 @@ public class UserController {
     // id로 회원 찾기
     @ApiOperation(value = "회원 조회", notes = "유저 id로 회원을 조회하는 API입니다.")
     @GetMapping("/getUser")
-    public User getUser(Long id) throws Exception{
-        System.out.println("id = " + id);
+    public UserDto getUser(Long id) throws Exception{
         User user = userService.findOne(id);
-        return user;
+        UserDto userDto = new UserDto(user.getUserId(), user.getName(), user.getPassword(), user.getNickname(), user.getGender(), user.getJob(), user.getStatus(),user.getCreatedAt() ,user.getModifiedAt(), user.getPhoneNumber(), user.getBirth(), user.getSalary());
+        return userDto;
     }
-
 
 
     // 유저 정보 update
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
     public void updateUser(UserDto userDto) throws Exception{
+        // DB에 UPDATE
         userService.updateUser(userDto);
     }
 
+    // 즐겨찾기 주식 저장
     @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
     @PostMapping("/saveStock")
     public void saveStock(UserStockDto userStockDto) throws Exception{
-        // TO-DO
-         userService.saveStock(userStockDto);
         // DB에 ISNERT
+         userService.saveStock(userStockDto);
+
     }
 
-    @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
+    // 즐겨찾기 주식 삭제
+    @ApiOperation(value = "회원 주식 즐겨찾기 삭제", notes = "해당 회원의 주식 즐겨찾기 삭제하는 API입니다.")
     @PostMapping("/removeStock")
     public void removeStock( UserStockDto userStockDto) throws Exception{
-        // TO-DO
-//        userService.removeStock(id, userStockDto);
         // DB에서 REMOVE
+        userService.removeStock(userStockDto);
+
     }
 
+    // 즐겨찾기 주식 목록 GET
     @ApiOperation(value = "회원 주식 즐겨찾기 목록 조회", notes = "해당 회원의 주식 즐겨찾기 목록을 조회하는 API입니다.")
     @GetMapping("/getStock")
-    public void getStock( Long id) throws Exception{
-        // TO-DO
+    public ResponseStockDto getStock( Long id) throws Exception{
+
         // DB에서 GET
+        List<FavoriteStock> stockList = userService.getStockList(id);
+
+        ResponseStockDto responseStockDto = new ResponseStockDto(stockList);
+
+        return responseStockDto;
     }
 }

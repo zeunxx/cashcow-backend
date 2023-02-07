@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class UserStockDto {
 
     @ApiModelProperty(value = "유저 코드")
-    private long id;
+    private long userPk;
 
     @ApiModelProperty(value = "주식 코드")
     private long stockCode;

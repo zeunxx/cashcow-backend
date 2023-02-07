@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "유저 자산 예금 정보", description = "유저 자산 예금 정보를 가진 Domain Class")
 public class DepositDto extends UserAssetsDto{
 

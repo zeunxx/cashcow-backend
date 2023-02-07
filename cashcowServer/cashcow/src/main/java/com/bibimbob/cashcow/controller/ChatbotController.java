@@ -10,7 +10,6 @@ import com.bibimbob.cashcow.dto.UserAssetsDto.DepositDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.LoanDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.SavingDto;
 import com.bibimbob.cashcow.dto.UserDto;
-import com.bibimbob.cashcow.dto.test;
 import com.bibimbob.cashcow.feign.DialogFlowFeign;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
@@ -29,7 +28,6 @@ public class ChatbotController {
 
     private final UserService userService;
     private final DialogFlowFeign dialogFlowFeign;
-    private test test;
 
     /**
      *  유저가 string 으로 챗봇 요청
@@ -51,16 +49,14 @@ public class ChatbotController {
     @PostMapping("/deposit")
     public List<ResponseDepositDto> updateDeposit( @RequestBody DepositDto depositDto) throws Exception {
 
-        // dialog server에 post 요청
-        // ResponseDepositDto에 정보 담아서 리턴
-
+        // 유저 찾기 -> dto에 담기
         User findUser = userService.findOne(depositDto.getId());
-        UserDto userDto = new UserDto(findUser);
+        UserDto userDto = new UserDto(findUser.getUserId(), findUser.getName(), findUser.getPassword(),findUser.getNickname() ,findUser.getGender(), findUser.getJob(),findUser.getStatus(),findUser.getCreatedAt(),findUser.getModifiedAt(),findUser.getPhoneNumber(),findUser.getBirth(),findUser.getSalary() );
 
-        System.out.println("userDto = " + userDto);
-
+        // 예금 정보 + 유저 정보 합쳐 request 위한 dto 생성
         RequestDepositDto requestDepositDto = new RequestDepositDto(depositDto.getExpectedPeriod(), depositDto.getSavingAmount(), userDto);
 
+        // feign 인터페이스로 POST 요청
         List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.deposit_products_search(requestDepositDto);
 
         return responseDepositDto;

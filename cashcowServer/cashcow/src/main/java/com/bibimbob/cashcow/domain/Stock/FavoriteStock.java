@@ -20,7 +20,7 @@ public class FavoriteStock {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_pk")
     private User user;
 
     @Column(name = "stock_code")

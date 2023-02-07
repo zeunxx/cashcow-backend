@@ -28,7 +28,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public Long save(User user) throws Exception {
         user.setCreatedAt(now());
-        userRepository.save(user);
+        user.setModifiedAt(now());
+
+        List<User> findUser = userRepository.findById(user.getUserId());
+        if (findUser.size() > 0){
+            throw new IllegalStateException("이미 존재하는 회원입니다");
+        }else{
+            userRepository.save(user);
+        }
+
         return user.getId();
     }
 
@@ -47,22 +55,21 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Long updateUser(UserDto userDto) throws Exception {
-        User findUser = userRepository.findOne(userDto.getId());
 
-        findUser.change(
-        userDto.getUserId(),
-        userDto.getBirth(),
-        userDto.getPassword(),
-        userDto.getName(),
-        userDto.getNickname(),
-        userDto.getGender(),
-        userDto.getJob(),
-        userDto.getStatus(),
-        userDto.getModifiedAt(),
-        userDto.getPhoneNumber(),
-        userDto.getSalary() );
+        List<User> findUser = userRepository.findById(userDto.getUserId());
+        findUser.get(0).change(
+            userDto.getBirth(),
+            userDto.getPassword(),
+            userDto.getName(),
+            userDto.getNickname(),
+            userDto.getGender(),
+            userDto.getJob(),
+            userDto.getStatus(),
+            now(),
+            userDto.getPhoneNumber(),
+            userDto.getSalary());
 
-        return findUser.getId();
+        return findUser.get(0).getId();
     }
 
     /**
@@ -70,15 +77,13 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Long saveStock(UserStockDto userStockDto) throws Exception {
-        User findUser = userRepository.findOne(userStockDto.getId());
-
-        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getId(), userStockDto.getStockCode());
+        User findUser = userRepository.findOne(userStockDto.getUserPk());
+        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getUserPk(), userStockDto.getStockCode());
 
         if (oneStock.size() == 0) {
             FavoriteStock favoriteStock = new FavoriteStock(findUser, userStockDto.getStockCode());
             userRepository.saveStock(favoriteStock);
         }
-
 
         return findUser.getId();
     }
@@ -88,14 +93,14 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Long removeStock(UserStockDto userStockDto) throws Exception {
-        User findUser = userRepository.findOne(userStockDto.getId());
+        User findUser = userRepository.findOne(userStockDto.getUserPk());
 
-        // db에서 해당 엔티티 찾아서 있으면 delete
-        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getId(), userStockDto.getStockCode());
+        // DB 에서 해당 엔티티 찾아서 있으면 delete
+        List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getUserPk(), userStockDto.getStockCode());
 
         if(oneStock.size()>=1){
             userRepository.removeStock(oneStock.get(0));
-            return oneStock.get(0).getId();
+            return oneStock.get(0).getUser().getId();
         }
 
         return 0L;
@@ -105,8 +110,9 @@ public class UserServiceImpl implements UserService{
      *  주식 즐겨찾기 get
      */
     @Override
-    public List<FavoriteStock> getStockList(Long userId) throws Exception {
-        List<FavoriteStock> stockList = userRepository.findStockList(userId);
+    public List<FavoriteStock> getStockList(Long userPK) throws Exception {
+        List<FavoriteStock> stockList = userRepository.findStockList(userPK);
+        System.out.println(stockList.get(0));
         return stockList;
     }
 

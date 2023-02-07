@@ -46,28 +46,10 @@ public class UserDto {
     @ApiModelProperty(value = "유저 연봉")
     private Long salary;
 
-//    private UserAssets userAsset;
 
 
-    //== 생성 메소드==//
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.userId = user.getUserId();
-        this.birth = user.getBirth();
-        this.name = user.getName();
-        this.password = user.getPassword();
-        this.nickname = user.getNickname();
-        this.gender = user.getGender();
-        this.job = user.getJob();
-        this.status = user.getStatus();
-        this.createdAt = user.getCreatedAt();
-        this.modifiedAt = user.getModifiedAt();
-        this.phoneNumber = user.getPhoneNumber();
-        this.salary = user.getSalary();
-
-    }
-
-    public UserDto(String userId, String name, String password, String nickname, GENDER gender, String job, STATUS status, LocalDateTime modifiedAt, String phoneNumber, LocalDate birth, long salary) {
+    //== 생성자==//
+    public UserDto(String userId, String name, String password, String nickname, GENDER gender, String job, STATUS status, LocalDateTime createdAt, LocalDateTime modifiedAt, String phoneNumber, LocalDate birth, Long salary) {
         this.userId = userId;
         this.name = name;
         this.password = password;
@@ -75,40 +57,19 @@ public class UserDto {
         this.gender = gender;
         this.job = job;
         this.status = status;
+        this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.birth = birth;
         this.salary = salary;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
-    public void setModifiedAt(LocalDateTime modifiedAt) {
-        this.modifiedAt = modifiedAt;
-    }
-
+    /**
+    * DTO -> ENTITY
+     */
     public User toEntity(){
-        return new User(userId, birth, password, name, nickname, gender, job, status, modifiedAt, phoneNumber, salary);
+        return new User(userId, birth, password, name, nickname, gender, job, status,createdAt ,modifiedAt, phoneNumber, salary);
     }
 
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", gender=" + gender +
-                ", job='" + job + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", birth=" + birth +
-                ", salary=" + salary +
-                '}';
-    }
 }
