@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
 
 @RestController
 @Api(tags = {"유저 API"})
@@ -57,7 +56,7 @@ public class UserController {
     // 유저 정보 update
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
-    public void updateUser(UserDto userDto) throws Exception{
+    public void updateUser(@RequestBody  UserDto userDto) throws Exception{
         // DB에 UPDATE
         userService.updateUser(userDto);
     }
@@ -65,17 +64,16 @@ public class UserController {
     // 즐겨찾기 주식 저장
     @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
     @PostMapping("/saveStock")
-    public void saveStock(UserStockDto userStockDto) throws Exception{
-        // DB에 ISNERT
-         userService.saveStock(userStockDto);
-
+    public void saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
+        // DB에 INSERT
+        userService.saveStock(userStockDto);
     }
 
     // 즐겨찾기 주식 삭제
     @ApiOperation(value = "회원 주식 즐겨찾기 삭제", notes = "해당 회원의 주식 즐겨찾기 삭제하는 API입니다.")
     @PostMapping("/removeStock")
-    public void removeStock( UserStockDto userStockDto) throws Exception{
-        // DB에서 REMOVE
+    public void removeStock(@RequestBody UserStockDto userStockDto) throws Exception{
+        // DB에 REMOVE
         userService.removeStock(userStockDto);
 
     }

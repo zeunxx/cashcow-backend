@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService{
         if (oneStock.size() == 0) {
             FavoriteStock favoriteStock = new FavoriteStock(findUser, userStockDto.getStockCode());
             userRepository.saveStock(favoriteStock);
+
         }
 
         return findUser.getId();
