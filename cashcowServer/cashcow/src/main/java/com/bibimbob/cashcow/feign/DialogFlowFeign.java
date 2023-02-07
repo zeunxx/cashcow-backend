@@ -34,7 +34,7 @@ public interface DialogFlowFeign {
     /**
      * 챗봇 적금 정보 전송
      */
-    @PostMapping(path="")
+    @PostMapping(path="/saving-products-search")
     public String saving_products_search(
             @RequestBody RequestSavingDto requestSavingDto
             );

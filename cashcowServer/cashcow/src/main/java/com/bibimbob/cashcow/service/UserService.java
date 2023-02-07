@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface UserService {
     public Long save(User user) throws Exception;
+
     public User findOne(long id) throws Exception;
-//    public Long updateAssets(Long assetsId, int temp ,UserAssetsDto userAssetsDto) throws Exception;
 
     public Long updateUser(UserDto userDto) throws Exception;
 
@@ -19,5 +19,5 @@ public interface UserService {
 
     Long removeStock(UserStockDto userStockDto) throws Exception;
 
-    List<FavoriteStock> getStockList(Long userId) throws Exception;
+    List<FavoriteStock> getStockList(Long userPK) throws Exception;
 }

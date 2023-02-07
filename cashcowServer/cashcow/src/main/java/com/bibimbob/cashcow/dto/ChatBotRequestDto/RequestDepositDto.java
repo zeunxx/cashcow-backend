@@ -1,7 +1,6 @@
 package com.bibimbob.cashcow.dto.ChatBotRequestDto;
 
 import com.bibimbob.cashcow.dto.UserDto;
-import com.bibimbob.cashcow.dto.test;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -25,6 +25,14 @@ public class UserRepository  {
     public User findOne(Long id){
         return em.find(User.class,id);
     }
+    /**
+     *  회원 id로 검색(pk x)
+     */
+    public List<User> findById(String userId){
+        return em.createQuery("select u from User u where u.userId=:userId", User.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
 
     /**
      * 주식 즐겨찾기 저장
@@ -43,8 +51,8 @@ public class UserRepository  {
     /**
      * 주식 즐겨찾기 1개 get
      */
-    public List<FavoriteStock>  findOneStock(Long userId, Long stockCode){
-        User user = em.find(User.class, userId);
+    public List<FavoriteStock>  findOneStock(Long id, Long stockCode){
+        User user = em.find(User.class, id);
         return em.createQuery("select s from FavoriteStock s where s.user = :user and s.stockCode = :stockCode", FavoriteStock.class)
                 .setParameter("user", user)
                 .setParameter("stockCode", stockCode)
@@ -55,8 +63,8 @@ public class UserRepository  {
     /**
      * 주식 즐겨찾기 list get
      */
-    public List<FavoriteStock>  findStockList(Long userId){
-        User user = em.find(User.class, userId);
+    public List<FavoriteStock>  findStockList(Long userPK){
+        User user = em.find(User.class, userPK);
         return em.createQuery("select s from FavoriteStock s where s.user = :user", FavoriteStock.class)
                 .setParameter("user", user)
                 .getResultList();
