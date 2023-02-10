@@ -64,10 +64,28 @@ public class UserDto {
         this.salary = salary;
     }
 
+    /**
+     * ENTITY -> DTO
+     */
+    public UserDto(User user) {
+        
+        this.userId = user.getUserId();
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.nickname = user.getNickname();
+        this.gender = user.getGender();
+        this.job = user.getJob();
+        this.status = user.getStatus();
+        this.createdAt = user.getCreatedAt();
+        this.modifiedAt = user.getModifiedAt();
+        this.phoneNumber = user.getPhoneNumber();
+        this.birth = user.getBirth();
+        this.salary = user.getSalary();
+    }
 
     /**
     * DTO -> ENTITY
-     */
+     * */
     public User toEntity(){
         return new User(userId, birth, password, name, nickname, gender, job, status,createdAt ,modifiedAt, phoneNumber, salary);
     }

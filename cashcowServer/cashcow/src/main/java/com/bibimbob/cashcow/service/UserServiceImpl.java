@@ -46,7 +46,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findOne(long id) throws Exception {
         User user = userRepository.findOne(id);
-        return user;
+        if(user != null){
+            return user;
+        }else{
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        }
     }
 
 
@@ -83,9 +87,11 @@ public class UserServiceImpl implements UserService{
         if (oneStock.size() == 0) {
             FavoriteStock favoriteStock = new FavoriteStock(findUser, userStockDto.getStockCode());
             userRepository.saveStock(favoriteStock);
+            return findUser.getId();
+        }else{
+            throw new IllegalStateException("이미 해당 유저의 즐겨찾기에 등록된 주식입니다.");
         }
 
-        return findUser.getId();
     }
 
     /**
@@ -102,6 +108,7 @@ public class UserServiceImpl implements UserService{
             userRepository.removeStock(oneStock.get(0));
             return oneStock.get(0).getUser().getId();
         }
+        // 가입 불가시 에러로 넘길지 고민
 
         return 0L;
     }
@@ -110,9 +117,9 @@ public class UserServiceImpl implements UserService{
      *  주식 즐겨찾기 get
      */
     @Override
-    public List<FavoriteStock> getStockList(Long userPK) throws Exception {
-        List<FavoriteStock> stockList = userRepository.findStockList(userPK);
-        System.out.println(stockList.get(0));
+    public List<FavoriteStock> getStockList(Long userPk) throws Exception {
+        User user = findOne(userPk);
+        List<FavoriteStock> stockList = userRepository.findStockList(user);
         return stockList;
     }
 

@@ -28,10 +28,11 @@ public class UserController {
     @ApiOperation(value = "회원 가입", notes = "유저 정보를 입력받아 회원 DB에 저장하는 API입니다.")
     @PostMapping("/join")
     public ResponseSaveDto join(@RequestBody UserDto userDto) throws Exception{
+
         // dto -> entity
         User user = userDto.toEntity();
 
-
+        // save
         try{
             userService.save(user);
         }catch(IllegalStateException e){
@@ -49,7 +50,7 @@ public class UserController {
     @GetMapping("/getUser")
     public UserDto getUser(Long id) throws Exception{
         User user = userService.findOne(id);
-        UserDto userDto = new UserDto(user.getUserId(), user.getName(), user.getPassword(), user.getNickname(), user.getGender(), user.getJob(), user.getStatus(),user.getCreatedAt() ,user.getModifiedAt(), user.getPhoneNumber(), user.getBirth(), user.getSalary());
+        UserDto userDto = new UserDto(user);
         return userDto;
     }
 
