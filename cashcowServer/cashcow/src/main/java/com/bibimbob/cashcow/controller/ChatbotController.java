@@ -42,7 +42,8 @@ public class ChatbotController {
     public ResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
         // dialog server에 post 요청
         String response=dialogFlowFeign.dialog_flow(requestDto).replaceAll("\"","");
-        ResponseDto dialogflowResponse = new ResponseDto(ChatResponse.NORMAL, response);
+
+        ResponseDto dialogflowResponse = new ResponseDto(response);
 
         return dialogflowResponse;
     }
@@ -63,7 +64,7 @@ public class ChatbotController {
         // feign 인터페이스로 POST 요청
         List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.deposit_products_search(requestDepositDto);
 
-        return new ReturnDto(ChatResponse.RECOMMEND_DEPOSIT,responseDepositDto);
+        return new ReturnDto(responseDepositDto);
     }
 
     /**
@@ -82,7 +83,7 @@ public class ChatbotController {
         // dialog server POST 요청
         List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.saving_products_search(requestSavingDto);
 
-        return new ReturnDto(ChatResponse.RECOMMEND_SAVING, responseDepositDto);
+        return new ReturnDto(responseDepositDto);
     }
 
     /**
@@ -101,14 +102,14 @@ public class ChatbotController {
         // dialog server POST 요청
         List<ResponseLoanDto> responseLoanDto = dialogFlowFeign.credit_loan_products_search(requestLoanDto);
 
-        return new ReturnDto(ChatResponse.RECOMMEND_LOAN, responseLoanDto);
+        return new ReturnDto(responseLoanDto);
     }
 
 
     @Data
     @AllArgsConstructor
     static class ReturnDto<T> {
-        private ChatResponse ChatEnum;
+//        private ChatResponse ChatEnum;
         private T data;
     }
 
