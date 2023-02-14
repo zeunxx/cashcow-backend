@@ -30,10 +30,10 @@ public class UserServiceImpl implements UserService{
         user.setCreatedAt(now());
         user.setModifiedAt(now());
 
-        List<User> findUser = userRepository.findById(user.getUserId());
-        if (findUser.size() > 0){
+        List<User> findUser = userRepository.findById(user.getUserId()); // 아이디 DB에 이미 있는지 확인
+        if (findUser.size() > 0){ // 1개 이상있으면 에러
             throw new IllegalStateException("이미 존재하는 회원입니다");
-        }else{
+        }else{ // 없으면 SAVE
             userRepository.save(user);
         }
 
@@ -74,6 +74,19 @@ public class UserServiceImpl implements UserService{
             userDto.getSalary());
 
         return findUser.get(0).getId();
+    }
+
+    /**
+     * 아이디 중복 체크
+     */
+    @Override
+    public int findById(String userId) {
+        List<User> findUser = userRepository.findById(userId);
+        if (findUser.size() > 0){ // 있음
+            return 1; //
+        }else { // 없음
+            return 0;
+        }
     }
 
     /**

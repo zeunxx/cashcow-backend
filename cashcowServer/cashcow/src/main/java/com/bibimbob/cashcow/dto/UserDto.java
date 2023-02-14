@@ -68,7 +68,7 @@ public class UserDto {
      * ENTITY -> DTO
      */
     public UserDto(User user) {
-        
+        this.id = user.getId();
         this.userId = user.getUserId();
         this.name = user.getName();
         this.password = user.getPassword();

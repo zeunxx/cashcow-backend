@@ -1,12 +1,10 @@
 package com.bibimbob.cashcow.controller;
 
-import com.bibimbob.cashcow.domain.ChatResponse;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDepositDto;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestLoanDto;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestSavingDto;
 import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDepositDto;
 import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDto;
-import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDto;
 import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseLoanDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.DepositDto;
@@ -19,8 +17,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -112,5 +113,21 @@ public class ChatbotController {
 //        private ChatResponse ChatEnum;
         private T data;
     }
+
+//    @ExceptionHandler(IllegalStateException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(IllegalStateException e) {
+//        ApiErrorResponse response =
+//                new ApiErrorResponse( "존재하지 않는 회원입니다.");
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//
+//    @Getter
+//    static class ApiErrorResponse{
+//        private String message;
+//
+//        public ApiErrorResponse(String message) {
+//            this.message = message;
+//        }
+//    }
 
 }
