@@ -20,4 +20,6 @@ public interface UserService {
     Long removeStock(UserStockDto userStockDto) throws Exception;
 
     List<FavoriteStock> getStockList(Long userPK) throws Exception;
+
+    int findById(String userId);
 }

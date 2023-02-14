@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestLoanDto {
-    private int num; // 신용점수?
+    private int creditScore; // 유저 신용 점수
+    private long loanAmount;
     private UserDto userDto;
 }

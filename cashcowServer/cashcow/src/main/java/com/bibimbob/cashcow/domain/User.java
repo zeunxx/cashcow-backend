@@ -51,11 +51,6 @@ public class User implements Serializable {
 
     private Long salary;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_assets_id")
-//    private UserAssets userAsset;
-
-
 
 
     //== 생성자 ==//
@@ -71,7 +66,6 @@ public class User implements Serializable {
         this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
-//        this.userAsset = userAsset;
     }
 
     //== 유저 정보 변경 ==// (setter 대신, 유저 PK와 id 변경 불가)
@@ -83,7 +77,6 @@ public class User implements Serializable {
         this.gender = gender;
         this.job = job;
         this.status = status;
-//        this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.salary = salary;

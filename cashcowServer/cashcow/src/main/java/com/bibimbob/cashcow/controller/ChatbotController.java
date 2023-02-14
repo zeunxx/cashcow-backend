@@ -1,11 +1,12 @@
 package com.bibimbob.cashcow.controller;
 
-import com.bibimbob.cashcow.domain.ChatResponse;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDepositDto;
+import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestLoanDto;
+import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestSavingDto;
 import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDepositDto;
 import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDto;
-import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDto;
+import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseLoanDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.DepositDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.LoanDto;
 import com.bibimbob.cashcow.dto.UserAssetsDto.SavingDto;
@@ -14,8 +15,13 @@ import com.bibimbob.cashcow.feign.DialogFlowFeign;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,10 +40,11 @@ public class ChatbotController {
      */
     @ApiOperation(value = "회원 챗봇 요청", notes = "챗봇 요청 메시지를 dialog-flow 서버에 보내는 API입니다.")
     @PostMapping("/chatbot/request")
-    public ResponseDto updateAssets(@RequestBody RequestDto requestDto) throws Exception {
+    public ResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
         // dialog server에 post 요청
         String response=dialogFlowFeign.dialog_flow(requestDto).replaceAll("\"","");
-        ResponseDto dialogflowResponse = new ResponseDto(ChatResponse.NORMAL, response);
+
+        ResponseDto dialogflowResponse = new ResponseDto(response);
 
         return dialogflowResponse;
     }
@@ -46,12 +53,11 @@ public class ChatbotController {
      * 예금 정보 입력 후 DIALOG-FLOW
      */
     @ApiOperation(value = "회원 예금 정보 입력", notes = "해당 회원의 예금 정보를 받는 API입니다.")
-    @PostMapping("/deposit")
-    public List<ResponseDepositDto> updateDeposit( @RequestBody DepositDto depositDto) throws Exception {
+    @PostMapping("/chatbot/deposit")
+    public ReturnDto requestDeposit( @RequestBody DepositDto depositDto) throws Exception {
 
-        // 유저 찾기 -> dto에 담기
-        User findUser = userService.findOne(depositDto.getId());
-        UserDto userDto = new UserDto(findUser.getUserId(), findUser.getName(), findUser.getPassword(),findUser.getNickname() ,findUser.getGender(), findUser.getJob(),findUser.getStatus(),findUser.getCreatedAt(),findUser.getModifiedAt(),findUser.getPhoneNumber(),findUser.getBirth(),findUser.getSalary() );
+        // 유저 찾기 -> DTO 에 담기
+        UserDto userDto = new UserDto(userService.findOne(depositDto.getId()));
 
         // 예금 정보 + 유저 정보 합쳐 request 위한 dto 생성
         RequestDepositDto requestDepositDto = new RequestDepositDto(depositDto.getExpectedPeriod(), depositDto.getSavingAmount(), userDto);
@@ -59,32 +65,69 @@ public class ChatbotController {
         // feign 인터페이스로 POST 요청
         List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.deposit_products_search(requestDepositDto);
 
-        return responseDepositDto;
+        return new ReturnDto(responseDepositDto);
     }
 
     /**
      * 적금 정보 입력 후 DIALOG-FLOW
      */
     @ApiOperation(value = "회원 적금 정보 입력", notes = "해당 회원의 적금 정보를 받는 API입니다.")
-    @PostMapping("/saving")
-    public void updateAssets( @RequestBody SavingDto savingDto) throws Exception {
-        User user = userService.findOne(savingDto.getId());
-        // TO - DO
-        // dialog server에 post 요청
+    @PostMapping("/chatbot/saving")
+    public ReturnDto requestSaving(@RequestBody SavingDto savingDto) throws Exception {
 
+        // 유저 찾기 -> DTO 에 담기
+        UserDto userDto = new UserDto(userService.findOne(savingDto.getId()));
+
+        // 적금 정보 + 유저 정보 합쳐 request 위한 dto 생성
+        RequestSavingDto requestSavingDto = new RequestSavingDto(savingDto.getExpectedPeriod(), savingDto.getSavingAmount(), savingDto.getMonthlyPayment(), userDto);
+
+        // dialog server POST 요청
+        List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.saving_products_search(requestSavingDto);
+
+        return new ReturnDto(responseDepositDto);
     }
 
     /**
      * 대출 정보 입력 후 DIALOG-FLOW
      */
     @ApiOperation(value = "회원 대출 정보 입력", notes = "해당 회원의 대출 정보를 받는 API입니다.")
-    @PostMapping("/loan}")
-    public void updateLoan( @RequestBody LoanDto loanDto) throws Exception {
-        User user = userService.findOne(loanDto.getId());
-        // TO - DO
-        // dialog server에 post 요청
+    @PostMapping("/chatbot/loan")
+    public ReturnDto requestLoan( @RequestBody LoanDto loanDto) throws Exception {
+
+        // 유저 찾기 -> DTO 에 담기
+        UserDto userDto = new UserDto(userService.findOne(loanDto.getId()));
+
+        // 적금 정보 + 유저 정보 합쳐 request 위한 dto 생성
+        RequestLoanDto requestLoanDto = new RequestLoanDto(loanDto.getCreditScore(), loanDto.getLoanAmount(), userDto);
+
+        // dialog server POST 요청
+        List<ResponseLoanDto> responseLoanDto = dialogFlowFeign.credit_loan_products_search(requestLoanDto);
+
+        return new ReturnDto(responseLoanDto);
     }
 
 
+    @Data
+    @AllArgsConstructor
+    static class ReturnDto<T> {
+//        private ChatResponse ChatEnum;
+        private T data;
+    }
+
+//    @ExceptionHandler(IllegalStateException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(IllegalStateException e) {
+//        ApiErrorResponse response =
+//                new ApiErrorResponse( "존재하지 않는 회원입니다.");
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//
+//    @Getter
+//    static class ApiErrorResponse{
+//        private String message;
+//
+//        public ApiErrorResponse(String message) {
+//            this.message = message;
+//        }
+//    }
 
 }

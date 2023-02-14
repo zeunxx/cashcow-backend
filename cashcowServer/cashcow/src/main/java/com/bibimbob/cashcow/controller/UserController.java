@@ -5,11 +5,17 @@ import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
 import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
+import com.bibimbob.cashcow.dto.UserResponseDto.ResponseIdCheckDto;
 import com.bibimbob.cashcow.dto.UserResponseDto.ResponseSaveDto;
+import com.bibimbob.cashcow.repository.UserRepository;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.loadbalancer.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,28 +33,23 @@ public class UserController {
     @ApiOperation(value = "회원 가입", notes = "유저 정보를 입력받아 회원 DB에 저장하는 API입니다.")
     @PostMapping("/join")
     public ResponseSaveDto join(@RequestBody UserDto userDto) throws Exception{
+
         // dto -> entity
         User user = userDto.toEntity();
 
-
-        try{
-            userService.save(user);
-        }catch(IllegalStateException e){
-            ResponseSaveDto responseSaveDto = new ResponseSaveDto(0L);
-            return responseSaveDto;
-        }
-
+        // save
+        userService.save(user);
         ResponseSaveDto responseSaveDto = new ResponseSaveDto(user.getId());
         return responseSaveDto;
     }
 
 
     // id로 회원 찾기
-    @ApiOperation(value = "회원 조회", notes = "유저 id로 회원을 조회하는 API입니다.")
+    @ApiOperation(value = "회원 조회", notes = "유저 pk로 회원을 조회하는 API입니다.")
     @GetMapping("/getUser")
     public UserDto getUser(Long id) throws Exception{
         User user = userService.findOne(id);
-        UserDto userDto = new UserDto(user.getUserId(), user.getName(), user.getPassword(), user.getNickname(), user.getGender(), user.getJob(), user.getStatus(),user.getCreatedAt() ,user.getModifiedAt(), user.getPhoneNumber(), user.getBirth(), user.getSalary());
+        UserDto userDto = new UserDto(user);
         return userDto;
     }
 
@@ -67,6 +68,12 @@ public class UserController {
     public void saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
         // DB에 INSERT
         userService.saveStock(userStockDto);
+    }
+
+    // 아이디 중복 체크
+    @GetMapping("/idCheck")
+    public ResponseIdCheckDto idCheck(String userId) throws Exception{
+        return new ResponseIdCheckDto(userService.findById(userId));
     }
 
     // 즐겨찾기 주식 삭제
@@ -90,4 +97,21 @@ public class UserController {
 
         return responseStockDto;
     }
+
+
+//    @ExceptionHandler(IllegalStateException.class)
+//    public ResponseEntity<ChatbotController.ApiErrorResponse> handleException(IllegalStateException e) {
+//        ChatbotController.ApiErrorResponse response =
+//                new ChatbotController.ApiErrorResponse( "존재하지 않는 회원입니다.");
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+
+//    @Getter
+//    static class ApiErrorResponse{
+//        private String message;
+//
+//        public ApiErrorResponse(String message) {
+//            this.message = message;
+//        }
+//    }
 }
