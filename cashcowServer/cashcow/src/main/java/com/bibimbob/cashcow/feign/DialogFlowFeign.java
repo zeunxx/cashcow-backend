@@ -1,13 +1,14 @@
 package com.bibimbob.cashcow.feign;
 
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDepositDto;
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDepositDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDto;
 
 
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestLoanDto;
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestSavingDto;
-import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDepositDto;
-import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseLoanDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public interface DialogFlowFeign {
      * 챗봇 요청 메시지
      */
     @PostMapping(path = "/dialog-flow")
-    public String dialog_flow(
+    public DialogFlowDto dialog_flow(
             @RequestBody RequestDto requestDto);
 
 

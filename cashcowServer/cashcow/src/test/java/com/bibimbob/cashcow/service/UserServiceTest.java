@@ -102,7 +102,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_저장() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, 12345L);
+        UserStockDto userStockDto = new UserStockDto(6L, "12345");
 
         //when
         Long aLong = userService.saveStock(userStockDto);
@@ -115,7 +115,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_삭제() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, 12345L);
+        UserStockDto userStockDto = new UserStockDto(6L, "12345");
 
         //when
         Long aLong = userService.removeStock(userStockDto);
@@ -128,7 +128,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_없는객체_삭제() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(4L, 54430L);
+        UserStockDto userStockDto = new UserStockDto(4L, "54430");
 
         //when
         Long aLong = userService.removeStock(userStockDto);
@@ -144,13 +144,13 @@ public class UserServiceTest {
         User user = userDto.toEntity();
         Long savedId = userService.save(user);
 
-        UserStockDto userStockDto = new UserStockDto(savedId, 54430L);
-        UserStockDto userStockDto2 = new UserStockDto(savedId, 54430L);
+        UserStockDto userStockDto = new UserStockDto(savedId, "54430");
+        UserStockDto userStockDto2 = new UserStockDto(savedId, "54430");
         Long aLong = userService.saveStock(userStockDto);
 
         //when
         Long aLong2 = userService.saveStock(userStockDto2);
-        List<FavoriteStock> oneStock = userRepository.findOneStock(savedId, 54430l);
+        List<FavoriteStock> oneStock = userRepository.findOneStock(savedId, "54430");
 
 
         //then

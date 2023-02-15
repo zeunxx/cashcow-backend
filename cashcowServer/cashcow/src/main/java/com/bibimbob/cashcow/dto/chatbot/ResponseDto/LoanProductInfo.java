@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto.ChatBotResponseDto;
+package com.bibimbob.cashcow.dto.chatbot.ResponseDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

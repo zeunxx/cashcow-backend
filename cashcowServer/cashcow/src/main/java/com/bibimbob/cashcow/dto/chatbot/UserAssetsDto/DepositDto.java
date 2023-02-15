@@ -1,6 +1,5 @@
-package com.bibimbob.cashcow.dto.UserAssetsDto;
+package com.bibimbob.cashcow.dto.chatbot.UserAssetsDto;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

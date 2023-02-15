@@ -1,15 +1,16 @@
 package com.bibimbob.cashcow.controller;
 
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDepositDto;
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestLoanDto;
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestSavingDto;
-import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDepositDto;
-import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseDto;
-import com.bibimbob.cashcow.dto.ChatBotRequestDto.RequestDto;
-import com.bibimbob.cashcow.dto.ChatBotResponseDto.ResponseLoanDto;
-import com.bibimbob.cashcow.dto.UserAssetsDto.DepositDto;
-import com.bibimbob.cashcow.dto.UserAssetsDto.LoanDto;
-import com.bibimbob.cashcow.dto.UserAssetsDto.SavingDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDepositDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowResponseDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
+import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
+import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.DepositDto;
+import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.LoanDto;
+import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.SavingDto;
 import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.feign.DialogFlowFeign;
 import com.bibimbob.cashcow.service.UserService;
@@ -17,11 +18,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,13 +38,11 @@ public class ChatbotController {
      */
     @ApiOperation(value = "회원 챗봇 요청", notes = "챗봇 요청 메시지를 dialog-flow 서버에 보내는 API입니다.")
     @PostMapping("/chatbot/request")
-    public ResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
+    public DialogFlowResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
+
         // dialog server에 post 요청
-        String response=dialogFlowFeign.dialog_flow(requestDto).replaceAll("\"","");
-
-        ResponseDto dialogflowResponse = new ResponseDto(response);
-
-        return dialogflowResponse;
+        DialogFlowDto response=dialogFlowFeign.dialog_flow(requestDto);
+        return new DialogFlowResponseDto(response.getVocab(), response.getFulfillment_text(), response.getIntent());
     }
 
     /**
@@ -55,6 +51,7 @@ public class ChatbotController {
     @ApiOperation(value = "회원 예금 정보 입력", notes = "해당 회원의 예금 정보를 받는 API입니다.")
     @PostMapping("/chatbot/deposit")
     public ReturnDto requestDeposit( @RequestBody DepositDto depositDto) throws Exception {
+
 
         // 유저 찾기 -> DTO 에 담기
         UserDto userDto = new UserDto(userService.findOne(depositDto.getId()));
@@ -114,20 +111,5 @@ public class ChatbotController {
         private T data;
     }
 
-//    @ExceptionHandler(IllegalStateException.class)
-//    public ResponseEntity<ApiErrorResponse> handleException(IllegalStateException e) {
-//        ApiErrorResponse response =
-//                new ApiErrorResponse( "존재하지 않는 회원입니다.");
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//
-//    @Getter
-//    static class ApiErrorResponse{
-//        private String message;
-//
-//        public ApiErrorResponse(String message) {
-//            this.message = message;
-//        }
-//    }
 
 }
