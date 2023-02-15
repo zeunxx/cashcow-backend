@@ -21,6 +21,6 @@ public class UserStockDto {
 
     @ApiModelProperty(value = "주식 코드")
     @JsonProperty("stock_code")
-    private long stockCode;
+    private String stockCode;
 
 }

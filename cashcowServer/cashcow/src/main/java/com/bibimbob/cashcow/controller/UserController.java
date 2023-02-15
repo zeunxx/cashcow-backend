@@ -1,5 +1,6 @@
 package com.bibimbob.cashcow.controller;
 
+import com.bibimbob.cashcow.Exception.ApiExceptionEntity;
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
@@ -11,6 +12,7 @@ import com.bibimbob.cashcow.repository.UserRepository;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.loadbalancer.Response;
@@ -57,17 +59,19 @@ public class UserController {
     // 유저 정보 update
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
-    public void updateUser(@RequestBody  UserDto userDto) throws Exception{
+    public StatusResponse updateUser(@RequestBody  UserDto userDto, Exception e) throws Exception{
         // DB에 UPDATE
         userService.updateUser(userDto);
+        return new StatusResponse(HttpStatus.OK);
     }
 
     // 즐겨찾기 주식 저장
     @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
     @PostMapping("/saveStock")
-    public void saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
+    public StatusResponse saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
         // DB에 INSERT
         userService.saveStock(userStockDto);
+        return new StatusResponse(HttpStatus.OK);
     }
 
     // 아이디 중복 체크
@@ -79,10 +83,10 @@ public class UserController {
     // 즐겨찾기 주식 삭제
     @ApiOperation(value = "회원 주식 즐겨찾기 삭제", notes = "해당 회원의 주식 즐겨찾기 삭제하는 API입니다.")
     @PostMapping("/removeStock")
-    public void removeStock(@RequestBody UserStockDto userStockDto) throws Exception{
+    public StatusResponse removeStock(@RequestBody UserStockDto userStockDto) throws Exception{
         // DB에 REMOVE
         userService.removeStock(userStockDto);
-
+        return new StatusResponse(HttpStatus.OK);
     }
 
     // 즐겨찾기 주식 목록 GET
@@ -99,19 +103,12 @@ public class UserController {
     }
 
 
-//    @ExceptionHandler(IllegalStateException.class)
-//    public ResponseEntity<ChatbotController.ApiErrorResponse> handleException(IllegalStateException e) {
-//        ChatbotController.ApiErrorResponse response =
-//                new ChatbotController.ApiErrorResponse( "존재하지 않는 회원입니다.");
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @Getter
+    static class StatusResponse{
+        private int status;
 
-//    @Getter
-//    static class ApiErrorResponse{
-//        private String message;
-//
-//        public ApiErrorResponse(String message) {
-//            this.message = message;
-//        }
-//    }
+        public StatusResponse(HttpStatus status) {
+            this.status = status.value();
+        }
+    }
 }

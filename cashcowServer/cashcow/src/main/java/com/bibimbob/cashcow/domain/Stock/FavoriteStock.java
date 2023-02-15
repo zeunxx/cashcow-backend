@@ -24,10 +24,10 @@ public class FavoriteStock {
     private User user;
 
     @Column(name = "stock_code")
-    private Long stockCode;
+    private String stockCode;
 
     //== 생성자 ==//
-    public FavoriteStock(User user, Long stockCode) {
+    public FavoriteStock(User user, String stockCode) {
         this.user = user;
         this.stockCode = stockCode;
     }

@@ -17,7 +17,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -41,6 +40,7 @@ public class ChatbotController {
     @ApiOperation(value = "회원 챗봇 요청", notes = "챗봇 요청 메시지를 dialog-flow 서버에 보내는 API입니다.")
     @PostMapping("/chatbot/request")
     public ResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
+
         // dialog server에 post 요청
         String response=dialogFlowFeign.dialog_flow(requestDto).replaceAll("\"","");
 
@@ -55,6 +55,7 @@ public class ChatbotController {
     @ApiOperation(value = "회원 예금 정보 입력", notes = "해당 회원의 예금 정보를 받는 API입니다.")
     @PostMapping("/chatbot/deposit")
     public ReturnDto requestDeposit( @RequestBody DepositDto depositDto) throws Exception {
+
 
         // 유저 찾기 -> DTO 에 담기
         UserDto userDto = new UserDto(userService.findOne(depositDto.getId()));
@@ -114,20 +115,5 @@ public class ChatbotController {
         private T data;
     }
 
-//    @ExceptionHandler(IllegalStateException.class)
-//    public ResponseEntity<ApiErrorResponse> handleException(IllegalStateException e) {
-//        ApiErrorResponse response =
-//                new ApiErrorResponse( "존재하지 않는 회원입니다.");
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//
-//    @Getter
-//    static class ApiErrorResponse{
-//        private String message;
-//
-//        public ApiErrorResponse(String message) {
-//            this.message = message;
-//        }
-//    }
 
 }

@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Long saveStock(UserStockDto userStockDto) throws Exception {
-        User findUser = userRepository.findOne(userStockDto.getUserPk());
+        User findUser = findOne(userStockDto.getUserPk());
         List<FavoriteStock> oneStock = userRepository.findOneStock(userStockDto.getUserPk(), userStockDto.getStockCode());
 
         if (oneStock.size() == 0) {

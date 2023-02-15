@@ -51,7 +51,7 @@ public class UserRepository  {
     /**
      * 주식 즐겨찾기 1개 get
      */
-    public List<FavoriteStock>  findOneStock(Long id, Long stockCode){
+    public List<FavoriteStock>  findOneStock(Long id, String stockCode){
         User user = em.find(User.class, id);
         return em.createQuery("select s from FavoriteStock s where s.user = :user and s.stockCode = :stockCode", FavoriteStock.class)
                 .setParameter("user", user)
