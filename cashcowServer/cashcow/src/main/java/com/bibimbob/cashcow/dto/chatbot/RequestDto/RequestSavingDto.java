@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto.ChatBotRequestDto;
+package com.bibimbob.cashcow.dto.chatbot.RequestDto;
 
 import com.bibimbob.cashcow.dto.UserDto;
 import lombok.AccessLevel;

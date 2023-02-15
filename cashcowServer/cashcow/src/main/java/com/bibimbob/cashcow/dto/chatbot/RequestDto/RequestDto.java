@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto.ChatBotRequestDto;
+package com.bibimbob.cashcow.dto.chatbot.RequestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

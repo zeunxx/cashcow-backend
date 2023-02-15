@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto.UserAssetsDto;
+package com.bibimbob.cashcow.dto.chatbot.UserAssetsDto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
