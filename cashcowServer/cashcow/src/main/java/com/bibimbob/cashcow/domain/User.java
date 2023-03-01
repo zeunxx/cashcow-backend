@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="User")
 @Getter
-public class User implements Serializable {
+public class User extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,12 +40,6 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private STATUS status;
 
-    @Column (name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column (name="modified_at")
-    private LocalDateTime modifiedAt;
-
     @Column (name="phone_number")
     private String phoneNumber;
 
@@ -54,7 +48,7 @@ public class User implements Serializable {
 
 
     //== 생성자 ==//
-    public User( String userId, LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status,LocalDateTime createdAt, LocalDateTime modifiedAt, String phoneNumber, long salary) {
+    public User( String userId, LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status, String phoneNumber, long salary) {
         this.userId = userId;
         this.birth = birth;
         this.password = password;
@@ -63,13 +57,12 @@ public class User implements Serializable {
         this.gender = gender;
         this.job = job;
         this.status = status;
-        this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
     }
 
     //== 유저 정보 변경 ==// (setter 대신, 유저 PK와 id 변경 불가)
-    public void change(LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status, LocalDateTime modifiedAt, String phoneNumber, Long salary) {
+    public void change(LocalDate birth, String password, String name, String nickname, GENDER gender, String job, STATUS status, String phoneNumber, Long salary) {
         this.birth = birth;
         this.password = password;
         this.name = name;
@@ -77,16 +70,8 @@ public class User implements Serializable {
         this.gender = gender;
         this.job = job;
         this.status = status;
-        this.modifiedAt = modifiedAt;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setModifiedAt(LocalDateTime modifiedAt) {
-        this.modifiedAt = modifiedAt;
-    }
 }

@@ -1,5 +1,6 @@
 package com.bibimbob.cashcow.domain.Stock;
 
+import com.bibimbob.cashcow.domain.BaseEntity;
 import com.bibimbob.cashcow.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class FavoriteStock {
+public class FavoriteStock extends BaseEntity {
 
     @Id @GeneratedValue
     private Long id;

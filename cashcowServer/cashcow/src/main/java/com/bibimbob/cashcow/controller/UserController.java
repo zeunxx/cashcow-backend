@@ -31,7 +31,10 @@ public class UserController {
 
     private final UserService userService;
 
-    // 회원가입 (회원 DB에 SAVE)
+    /**
+     * 회원가입 (회원 DB에 SAVE)
+     */
+
     @ApiOperation(value = "회원 가입", notes = "유저 정보를 입력받아 회원 DB에 저장하는 API입니다.")
     @PostMapping("/join")
     public ResponseSaveDto join(@RequestBody UserDto userDto) throws Exception{
@@ -44,8 +47,10 @@ public class UserController {
         return new ResponseSaveDto(user.getId());
     }
 
+    /**
+     * id로 회원 찾기
+     */
 
-    // id로 회원 찾기
     @ApiOperation(value = "회원 조회", notes = "유저 pk로 회원을 조회하는 API입니다.")
     @GetMapping("/getUser")
     public UserDto getUser(Long id) throws Exception{
@@ -54,7 +59,9 @@ public class UserController {
     }
 
 
-    // 유저 정보 update
+    /**
+     * 유저 정보 update
+     */
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
     public StatusResponse updateUser(@RequestBody  UserDto userDto, Exception e) throws Exception{
@@ -63,7 +70,9 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK);
     }
 
-    // 즐겨찾기 주식 저장
+    /**
+     *  즐겨찾기 주식 저장
+     */
     @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
     @PostMapping("/saveStock")
     public StatusResponse saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
@@ -72,13 +81,18 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK);
     }
 
-    // 아이디 중복 체크
+    /**
+     * 아이디 중복 체크
+     */
+
     @GetMapping("/idCheck")
     public ResponseIdCheckDto idCheck(String userId) throws Exception{
         return new ResponseIdCheckDto(userService.findById(userId));
     }
 
-    // 즐겨찾기 주식 삭제
+    /**
+     * 즐겨찾기 주식 삭제
+     */
     @ApiOperation(value = "회원 주식 즐겨찾기 삭제", notes = "해당 회원의 주식 즐겨찾기 삭제하는 API입니다.")
     @PostMapping("/removeStock")
     public StatusResponse removeStock(@RequestBody UserStockDto userStockDto) throws Exception{
@@ -87,7 +101,9 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK);
     }
 
-    // 즐겨찾기 주식 목록 GET
+    /**
+     * 즐겨찾기 주식 목록 GET
+     */
     @ApiOperation(value = "회원 주식 즐겨찾기 목록 조회", notes = "해당 회원의 주식 즐겨찾기 목록을 조회하는 API입니다.")
     @GetMapping("/getStock")
     public ResponseStockDto getStock( Long id) throws Exception{
