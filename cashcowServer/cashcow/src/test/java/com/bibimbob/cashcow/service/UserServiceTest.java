@@ -6,6 +6,7 @@ import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.repository.StockJpaRepository;
 import com.bibimbob.cashcow.repository.UserJpaRepository;
 import com.bibimbob.cashcow.repository.UserRepository;
 import org.junit.Assert;
@@ -27,6 +28,7 @@ import java.util.OptionalInt;
 import java.util.Random;
 import org.springframework.boot.test.context.SpringBootTest;
 import static java.time.LocalDateTime.now;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
@@ -37,6 +39,7 @@ public class UserServiceTest {
 
     @Autowired UserService userService;
     @Autowired UserJpaRepository userJpaRepository;
+    @Autowired StockJpaRepository stockJpaRepository;
     @Autowired EntityManager em;
 
     @Test
@@ -56,11 +59,10 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 회원_가입() throws Exception{
         //given
-        UserDto userDto = new UserDto("testetse","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
+        UserDto userDto = new UserDto("1234","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
 
         User user = userDto.toEntity();
 
-//        User user = new User("testetse", LocalDate.of(1999, 10, 9), "pass", "name", "별명", GENDER.FEMALE, "student", STATUS.ACTIVE, "01056449815", 00);
         //when
         Long savedId = userService.save(user);
 
@@ -100,12 +102,38 @@ public class UserServiceTest {
         fail("예외가 발생해야 한다.");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void 탈퇴() throws Exception{
+        //given
+        long userId = 6L;
+
+        //when
+        userService.deleteUser(userId);
+        User findUser = userService.findOne(userId);
+
+        //then
+        fail("예외가 발생해야 함");
+    }
+
+    @Test
+//    @Rollback(false)
+    public void 탈퇴_주식즐겨찾기_삭제() throws Exception{
+        //given
+        long userId = 6L;
+
+        //when
+        userService.deleteUser(userId);
+        List<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(userId);
+
+        //then
+        assertEquals(0, findStockList.size());
+    }
 
     @Test
 //    @Rollback(false)
     public void 즐겨찾기_저장() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, "00000");
+        UserStockDto userStockDto = new UserStockDto(6L, "0014");
 
         //when
         Long aLong = userService.saveStock(userStockDto);
@@ -118,7 +146,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_삭제() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, "12345");
+        UserStockDto userStockDto = new UserStockDto(6L, "0000");
 
         //when
         Long aLong = userService.removeStock(userStockDto);
@@ -170,7 +198,7 @@ public class UserServiceTest {
         }
 
         //then
-        Assert.assertEquals(10,stockList.size());
+        Assert.assertEquals(2,stockList.size());
 
     }
     /**
