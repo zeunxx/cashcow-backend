@@ -41,8 +41,7 @@ public class UserController {
 
         // save
         userService.save(user);
-        ResponseSaveDto responseSaveDto = new ResponseSaveDto(user.getId());
-        return responseSaveDto;
+        return new ResponseSaveDto(user.getId());
     }
 
 
@@ -51,8 +50,7 @@ public class UserController {
     @GetMapping("/getUser")
     public UserDto getUser(Long id) throws Exception{
         User user = userService.findOne(id);
-        UserDto userDto = new UserDto(user);
-        return userDto;
+        return new UserDto(user);
     }
 
 
@@ -96,10 +94,7 @@ public class UserController {
 
         // DB에서 GET
         List<FavoriteStock> stockList = userService.getStockList(id);
-
-        ResponseStockDto responseStockDto = new ResponseStockDto(stockList);
-
-        return responseStockDto;
+        return new ResponseStockDto(stockList);
     }
 
 

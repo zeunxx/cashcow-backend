@@ -38,7 +38,7 @@ public class FavoriteStock {
     @Override
     public String toString() {
         return "FavoriteStock{" +
-                ", user=" + user.getName() +
+                " user=" + user.getName() +
                 ", stockCode=" + stockCode +
                 '}';
     }

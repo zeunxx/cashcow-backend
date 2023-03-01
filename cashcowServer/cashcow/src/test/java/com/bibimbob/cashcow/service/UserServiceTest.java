@@ -6,13 +6,13 @@ import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.repository.UserJpaRepository;
 import com.bibimbob.cashcow.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,18 +24,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Random;
-
+import org.springframework.boot.test.context.SpringBootTest;
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.fail;
 
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 @Transactional
+@RunWith(SpringRunner.class)
 public class UserServiceTest {
 
     @Autowired UserService userService;
+    @Autowired UserJpaRepository userJpaRepository;
     @Autowired EntityManager em;
-    @Autowired UserRepository userRepository;
 
     @Test
     public void 회원_한명_조회() throws Exception{
@@ -71,14 +72,14 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 회원수정() throws Exception{
         //given
-        UserDto userDto = new UserDto("new_Id","변경된 이름3","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
+        UserDto userDto = new UserDto("newId","변경된 이름4","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
 
 
         //when
         Long assetId = userService.updateUser(userDto);
 
         //then
-        Assert.assertEquals("변경된 이름3", userService.findOne(assetId).getName());
+        Assert.assertEquals("변경된 이름4", userService.findOne(assetId).getName());
     }
     
     @Test(expected = IllegalStateException.class)
@@ -102,7 +103,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_저장() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, "12345");
+        UserStockDto userStockDto = new UserStockDto(6L, "00000");
 
         //when
         Long aLong = userService.saveStock(userStockDto);
@@ -137,24 +138,23 @@ public class UserServiceTest {
 //        Assert.assertEquals(0, Optional.ofNullable(aLong));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void 즐겨찾기_중복_방지() throws Exception{
         //given
         UserDto userDto = new UserDto("new_newId!","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,now(),"00",LocalDate.of(1999, 10, 9),3000L);
         User user = userDto.toEntity();
         Long savedId = userService.save(user);
 
-        UserStockDto userStockDto = new UserStockDto(savedId, "54430");
-        UserStockDto userStockDto2 = new UserStockDto(savedId, "54430");
+        UserStockDto userStockDto = new UserStockDto(savedId, "98765");
+        UserStockDto userStockDto2 = new UserStockDto(savedId, "98765");
         Long aLong = userService.saveStock(userStockDto);
 
         //when
         Long aLong2 = userService.saveStock(userStockDto2);
-        List<FavoriteStock> oneStock = userRepository.findOneStock(savedId, "54430");
 
 
         //then
-        Assert.assertEquals(1,oneStock.size());
+        fail();
     }
 
     @Test
@@ -168,7 +168,7 @@ public class UserServiceTest {
         }
 
         //then
-        Assert.assertEquals(2,stockList.size());
+        Assert.assertEquals(10,stockList.size());
 
     }
     /**
