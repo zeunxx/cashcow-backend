@@ -70,24 +70,37 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK);
     }
 
+
+    /**
+     * 아이디 중복 체크
+     */
+    @ApiOperation(value = "회원가입 아이디 중복 체크", notes = "회원가입시 아이디 중복 여부 확인하는 API입니다.")
+
+    @GetMapping("/idCheck")
+    public ResponseIdCheckDto idCheck(String userId) throws Exception{
+        return new ResponseIdCheckDto(userService.findById(userId));
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @ApiOperation(value = "회원 탈퇴", notes = "해당 회원의 정보를 삭제하는 API입니다.")
+    @PostMapping("/deleteUser")
+    public StatusResponse deleteUser(@RequestBody long userId) throws Exception{
+        // DB에 REMOVE
+        userService.deleteUser(userId);
+        return new StatusResponse(HttpStatus.OK);
+    }
+
     /**
      *  즐겨찾기 주식 저장
      */
-    @ApiOperation(value = "회원 주식 즐겨찾기 저장 업데이트", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
+    @ApiOperation(value = "회원 주식 즐겨찾기 저장", notes = "해당 회원의 주식 즐겨찾기 저장하는 API입니다.")
     @PostMapping("/saveStock")
     public StatusResponse saveStock(@RequestBody UserStockDto userStockDto) throws Exception{
         // DB에 INSERT
         userService.saveStock(userStockDto);
         return new StatusResponse(HttpStatus.OK);
-    }
-
-    /**
-     * 아이디 중복 체크
-     */
-
-    @GetMapping("/idCheck")
-    public ResponseIdCheckDto idCheck(String userId) throws Exception{
-        return new ResponseIdCheckDto(userService.findById(userId));
     }
 
     /**

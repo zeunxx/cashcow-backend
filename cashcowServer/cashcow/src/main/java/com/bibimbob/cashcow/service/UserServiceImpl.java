@@ -96,6 +96,15 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
+     * 회원 정보 삭제
+     */
+    @Override
+    public void deleteUser(long userId) throws Exception{
+        stockJpaRepository.deleteAllByUser(findOne(userId));
+        userJpaRepository.delete(findOne(userId));
+    }
+
+    /**
      * 주식 즐겨찾기 save
      */
     @Override

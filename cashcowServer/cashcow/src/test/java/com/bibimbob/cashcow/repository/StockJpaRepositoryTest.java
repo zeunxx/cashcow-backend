@@ -1,6 +1,7 @@
 package com.bibimbob.cashcow.repository;
 
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
+import com.bibimbob.cashcow.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest
 @Transactional
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class StockJpaRepositoryTest {
 
     @Autowired StockJpaRepository stockJpaRepository;
+    @Autowired UserJpaRepository userJpaRepository;
 
     @Test
     public void findStockList() throws Exception{
@@ -41,7 +45,25 @@ public class StockJpaRepositoryTest {
 
         //then
         if (findStock.isPresent()){
-            Assertions.assertThat(findStock.get().getId()).isEqualTo(28);
+            assertThat(findStock.get().getId()).isEqualTo(28);
         }
+    }
+
+    @Test
+    public void deleteStockList() throws Exception{
+        //given
+        long userId = 6L;
+
+        //when
+        Optional<User> findUser = userJpaRepository.findById(userId);
+        if (findUser.isPresent()){
+            stockJpaRepository.deleteAllByUser(findUser.get());
+
+        }
+
+        List<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(userId);
+
+        //then
+        assertThat(findStockList.size()).isEqualTo(0);
     }
 }

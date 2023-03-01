@@ -21,5 +21,7 @@ public interface UserService {
 
     List<FavoriteStock> getStockList(Long userPK) throws Exception;
 
-    int findById(String userId);
+    int findById(String userId) throws Exception;
+
+    void deleteUser(long userId)  throws Exception;
 }
