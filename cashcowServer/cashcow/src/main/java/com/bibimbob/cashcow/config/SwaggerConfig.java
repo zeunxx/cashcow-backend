@@ -12,7 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfig {
 
-    // http://localhost:{설정한 포트번호}/swagger-ui/index.html 접속시 확인 가능
+    // http://localhost:8080/swagger-ui/index.html 접속시 확인 가능
 
     @Bean
     public Docket api() { // swagger api 설정

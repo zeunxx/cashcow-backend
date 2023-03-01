@@ -87,7 +87,7 @@ public class UserDto {
     * DTO -> ENTITY
      * */
     public User toEntity(){
-        return new User(userId, birth, password, name, nickname, gender, job, status,createdAt ,modifiedAt, phoneNumber, salary);
+        return new User(userId, birth, password, name, nickname, gender, job, status, phoneNumber, salary);
     }
 
 }

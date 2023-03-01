@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +56,11 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 회원_가입() throws Exception{
         //given
-        UserDto userDto = new UserDto("new_new_Id","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
+        UserDto userDto = new UserDto("testetse","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
 
         User user = userDto.toEntity();
 
+//        User user = new User("testetse", LocalDate.of(1999, 10, 9), "pass", "name", "별명", GENDER.FEMALE, "student", STATUS.ACTIVE, "01056449815", 00);
         //when
         Long savedId = userService.save(user);
 
@@ -72,14 +74,14 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 회원수정() throws Exception{
         //given
-        UserDto userDto = new UserDto("newId","변경된 이름4","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
+        UserDto userDto = new UserDto("testetse","이름 변경","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
 
 
         //when
         Long assetId = userService.updateUser(userDto);
 
         //then
-        Assert.assertEquals("변경된 이름4", userService.findOne(assetId).getName());
+        Assert.assertEquals("이름 변경", userService.findOne(assetId).getName());
     }
     
     @Test(expected = IllegalStateException.class)

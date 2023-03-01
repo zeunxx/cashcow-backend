@@ -32,8 +32,6 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Long save(User user) throws Exception {
-        user.setCreatedAt(now());
-        user.setModifiedAt(now());
 
         Optional<User> findUser = userJpaRepository.findByUserId(user.getUserId());// 아이디 DB에 이미 있는지 확인
         if (findUser.isPresent()){ // 1개 이상있으면 에러
@@ -77,7 +75,6 @@ public class UserServiceImpl implements UserService{
                     userDto.getGender(),
                     userDto.getJob(),
                     userDto.getStatus(),
-                    now(),
                     userDto.getPhoneNumber(),
                     userDto.getSalary());
         }
