@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto;
+package com.bibimbob.cashcow.dto.User;
 
 import com.bibimbob.cashcow.domain.GENDER;
 import com.bibimbob.cashcow.domain.STATUS;

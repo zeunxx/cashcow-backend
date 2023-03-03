@@ -1,4 +1,4 @@
-package com.bibimbob.cashcow.dto.UserResponseDto;
+package com.bibimbob.cashcow.dto.User.UserResponseDto;
 
 import lombok.Getter;
 

@@ -8,53 +8,34 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProductInfo {
     @JsonProperty("최고우대금리")
-    private String 최고우대금리;
+    private String bestInterestRate;
     @JsonProperty("저축금리")
-    private String 저축금리;
+    private String savingRate;
     @JsonProperty("저축기간")
-    private String 저축기간;
+    private String savingPeriod;
     @JsonProperty("적립유형명")
-    private String 적립유형명;
+    private String accumulationTypeName;
     @JsonProperty("저축금리유형명")
-    private String 저축금리유형명;
+    private String savingsRateTypeName;
     @JsonProperty("최고한도")
-    private String 최고한도;
+    private String maximumLimit;
     @JsonProperty("가입대상")
-    private String 가입대상;
+    private String subscriptionTarget;
     @JsonProperty("가입제한")
-    private String 가입제한;
+    private String subscriptionRestrictions;
     @JsonProperty("우대조건")
-    private String 우대조건;
+    private String preferentialConditions;
     @JsonProperty("만기후이자율")
-    private String 만기후이자율;
+    private String interestRateAfterMaturity;
     @JsonProperty("가입방법")
-    private String 가입방법;
+    private String route;
     @JsonProperty("금융상품명")
-    private String 금융상품명;
+    private String financialProductName;
     @JsonProperty("금융회사명")
-    private String 금융회사명;
+    private String financialCompanyName;
     @JsonProperty("공시제출월")
-    private String 공시제출월;
+    private String noticeSubmissionMonth;
 
-    @Override
-    public String toString() {
-        return "ProductInfo{" +
-                "최고우대금리='" + 최고우대금리 + '\'' +
-                ", 저축금리='" + 저축금리 + '\'' +
-                ", 저축기간='" + 저축기간 + '\'' +
-                ", 적립유형명='" + 적립유형명 + '\'' +
-                ", 저축금리유형명='" + 저축금리유형명 + '\'' +
-                ", 최고한도='" + 최고한도 + '\'' +
-                ", 가입대상='" + 가입대상 + '\'' +
-                ", 가입제한='" + 가입제한 + '\'' +
-                ", 우대조건='" + 우대조건 + '\'' +
-                ", 만기후이자율='" + 만기후이자율 + '\'' +
-                ", 가입방법='" + 가입방법 + '\'' +
-                ", 금융상품명='" + 금융상품명 + '\'' +
-                ", 금융회사명='" + 금융회사명 + '\'' +
-                ", 공시제출월='" + 공시제출월 + '\'' +
-                '}';
-    }
 
     public ProductInfo() {
     }

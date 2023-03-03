@@ -1,24 +1,27 @@
 package com.bibimbob.cashcow.dto.chatbot.ResponseDto;
 
-import com.bibimbob.cashcow.domain.ChatResponse;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class DialogFlowDto {
+    @JsonProperty("terms_description")
+    private TermsDescription termsDescription;
+    @JsonProperty("fulfillment_text")
+    private String fulfillmentText;
+    @JsonProperty("intent")
     private String intent;
-    private Optional<String> vocab;
-    private String fulfillment_text;
 
 
-    public DialogFlowDto(String intent, Optional<String> vocab, String fulfillment_text) {
+    public DialogFlowDto(TermsDescription termsDescription, String fulfillmentText, String intent) {
+        this.termsDescription = termsDescription;
+        this.fulfillmentText = fulfillmentText;
         this.intent = intent;
-        this.vocab = vocab;
-        this.fulfillment_text = fulfillment_text;
     }
+
 
 }

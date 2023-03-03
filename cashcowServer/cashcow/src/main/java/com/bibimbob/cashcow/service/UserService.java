@@ -2,9 +2,10 @@ package com.bibimbob.cashcow.service;
 
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
-import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
-import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface UserService {
 
     Long removeStock(UserStockDto userStockDto) throws Exception;
 
-    List<FavoriteStock> getStockList(Long userPK) throws Exception;
+    Page<FavoriteStock> getStockList(Pageable pageable, Long userPK) throws Exception;
 
     int findById(String userId) throws Exception;
 

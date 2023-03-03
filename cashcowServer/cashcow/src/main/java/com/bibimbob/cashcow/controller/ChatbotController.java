@@ -1,5 +1,6 @@
 package com.bibimbob.cashcow.controller;
 
+import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
@@ -11,7 +12,6 @@ import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.DepositDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.LoanDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.SavingDto;
-import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.feign.DialogFlowFeign;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
@@ -42,7 +42,7 @@ public class ChatbotController {
 
         // dialog server에 post 요청
         DialogFlowDto response=dialogFlowFeign.dialog_flow(requestDto);
-        return new DialogFlowResponseDto(response.getVocab(), response.getFulfillment_text(), response.getIntent());
+        return new DialogFlowResponseDto(response.getTermsDescription(), response.getFulfillmentText(), response.getIntent());
     }
 
     /**
