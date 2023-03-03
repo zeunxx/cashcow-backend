@@ -4,7 +4,7 @@ import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowResponseDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDialogFlowDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDto;
@@ -38,11 +38,11 @@ public class ChatbotController {
      */
     @ApiOperation(value = "회원 챗봇 요청", notes = "챗봇 요청 메시지를 dialog-flow 서버에 보내는 API입니다.")
     @PostMapping("/chatbot/request")
-    public DialogFlowResponseDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
+    public ResponseDialogFlowDto chatbotRequest(@RequestBody RequestDto requestDto) throws Exception {
 
         // dialog server에 post 요청
         DialogFlowDto response=dialogFlowFeign.dialog_flow(requestDto);
-        return new DialogFlowResponseDto(response.getTermsDescription(), response.getFulfillmentText(), response.getIntent());
+        return new ResponseDialogFlowDto(response.getTermsDescription(), response.getFulfillmentText(), response.getIntent());
     }
 
     /**

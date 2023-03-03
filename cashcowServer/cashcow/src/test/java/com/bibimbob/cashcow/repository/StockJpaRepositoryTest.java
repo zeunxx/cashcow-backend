@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,59 +27,15 @@ public class StockJpaRepositoryTest {
     @Autowired StockJpaRepository stockJpaRepository;
     @Autowired UserJpaRepository userJpaRepository;
 
-    Pageable pageable = new Pageable() {
-        @Override
-        public int getPageNumber() {
-            return 0;
-        }
+    PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "stockCode"));
 
-        @Override
-        public int getPageSize() {
-            return 0;
-        }
-
-        @Override
-        public long getOffset() {
-            return 0;
-        }
-
-        @Override
-        public Sort getSort() {
-            return null;
-        }
-
-        @Override
-        public Pageable next() {
-            return null;
-        }
-
-        @Override
-        public Pageable previousOrFirst() {
-            return null;
-        }
-
-        @Override
-        public Pageable first() {
-            return null;
-        }
-
-        @Override
-        public Pageable withPage(int pageNumber) {
-            return null;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return false;
-        }
-    };
 
     @Test
     public void findStockList() throws Exception{
         //given
 
         //when
-        Page<FavoriteStock> findAll =  stockJpaRepository.findByUserPk(pageable,6L);
+        Page<FavoriteStock> findAll =  stockJpaRepository.findByUserPk(pageRequest,6L);
 
         //then
         for (FavoriteStock stock : findAll) {
@@ -110,7 +67,7 @@ public class StockJpaRepositoryTest {
             stockJpaRepository.deleteAllByUser(findUser.get());
         }
 
-        Page<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(pageable,userId);
+        Page<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(pageRequest,userId);
 
         //then
         assertThat(findStockList.getTotalElements()).isEqualTo(0);

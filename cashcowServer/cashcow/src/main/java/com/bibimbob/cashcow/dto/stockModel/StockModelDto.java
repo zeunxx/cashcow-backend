@@ -15,6 +15,4 @@ public class StockModelDto {
 
     private List<String> stockPrice;
 	private long predictDays;
-
-
 }

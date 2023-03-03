@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,53 +42,7 @@ public class UserServiceTest {
     @Autowired StockJpaRepository stockJpaRepository;
     @Autowired EntityManager em;
 
-    Pageable pageable = new Pageable() {
-        @Override
-        public int getPageNumber() {
-            return 0;
-        }
-
-        @Override
-        public int getPageSize() {
-            return 0;
-        }
-
-        @Override
-        public long getOffset() {
-            return 0;
-        }
-
-        @Override
-        public Sort getSort() {
-            return null;
-        }
-
-        @Override
-        public Pageable next() {
-            return null;
-        }
-
-        @Override
-        public Pageable previousOrFirst() {
-            return null;
-        }
-
-        @Override
-        public Pageable first() {
-            return null;
-        }
-
-        @Override
-        public Pageable withPage(int pageNumber) {
-            return null;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return false;
-        }
-    };
-
+    PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "stockCode"));
 
     @Test
     public void 회원_한명_조회() throws Exception{
@@ -170,7 +125,7 @@ public class UserServiceTest {
 
         //when
         userService.deleteUser(userId);
-        Page<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(pageable,userId);
+        Page<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(pageRequest,userId);
 
         //then
         assertEquals(0, findStockList.getTotalElements());
@@ -193,7 +148,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_삭제() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, "0000");
+        UserStockDto userStockDto = new UserStockDto(37L, "1234");
 
         //when
         Long aLong = userService.removeStock(userStockDto);
@@ -237,7 +192,7 @@ public class UserServiceTest {
     @Test
     public void 즐겨찾기_리스트_get() throws Exception{
         //given
-        Page<FavoriteStock> stockList = userService.getStockList(pageable,6L);
+        Page<FavoriteStock> stockList = userService.getStockList(pageRequest,37L);
 
         //when
         for (FavoriteStock favoriteStock : stockList) {
@@ -245,10 +200,8 @@ public class UserServiceTest {
         }
 
         //then
-        Assert.assertEquals(2,stockList.getTotalElements());
+        Assert.assertEquals(14,stockList.getTotalElements());
 
     }
-    /**
-     * 즐겨찾기 없는객체 저장 방지
-     */
+
 }
