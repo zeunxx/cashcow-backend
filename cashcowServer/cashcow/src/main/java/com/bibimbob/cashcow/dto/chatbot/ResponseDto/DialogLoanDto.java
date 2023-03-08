@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseLoanDto {
+public class DialogLoanDto {
+
     @JsonProperty("product_info")
-    private ResponseLoanProductInfo productInfo;
+    private LoanProductInfo loanProductInfo;
 
 }

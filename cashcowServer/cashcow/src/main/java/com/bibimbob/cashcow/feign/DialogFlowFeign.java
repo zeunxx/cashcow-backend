@@ -6,9 +6,9 @@ import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDto;
 
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogLoanDto;
 import com.bibimbob.cashcow.dto.stockModel.RequestStockModelDto;
 import com.bibimbob.cashcow.dto.stockModel.ResponseStockModelDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -32,7 +32,7 @@ public interface DialogFlowFeign {
      * 챗봇 예금 정보 전송
      */
     @PostMapping(path="/deposit-products-search")
-    public List<ResponseDepositDto> deposit_products_search(
+    public List<DialogDepositDto> deposit_products_search(
             @RequestBody RequestDepositDto requestDepositDto
             );
 
@@ -40,7 +40,7 @@ public interface DialogFlowFeign {
      * 챗봇 적금 정보 전송
      */
     @PostMapping(path="/saving-products-search")
-    public List<ResponseDepositDto> saving_products_search(
+    public List<DialogDepositDto> saving_products_search(
             @RequestBody RequestSavingDto requestSavingDto
             );
 
@@ -48,7 +48,7 @@ public interface DialogFlowFeign {
      * 챗봇 대출 정보 전송
      */
     @PostMapping(path = "/credit-loan-products-search")
-    public List<ResponseLoanDto> credit_loan_products_search(
+    public List<DialogLoanDto> credit_loan_products_search(
             @RequestBody RequestLoanDto requestLoanDto
             );
 

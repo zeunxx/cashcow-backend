@@ -21,12 +21,9 @@ public class StockModelController {
     @PostMapping("/stockModel")
     public ResponseStockModelDto stockModel(@RequestBody StockModelDto stockModelDto){
 
-        RequestStockModelDto requestStockModelDto =
-                new RequestStockModelDto(stockModelDto.getStockPrice()
-                        .stream()
-                        .map(s -> Integer.parseInt(s))
-                        .collect(toList()), stockModelDto.getPredictDays());
-        ResponseStockModelDto responseStockModelDto = dialogFlowFeign.stock_model(requestStockModelDto);
-        return responseStockModelDto;
+        return dialogFlowFeign.stock_model(new RequestStockModelDto(stockModelDto.getStockPrice()
+                .stream()
+                .map(s -> Integer.parseInt(s))
+                .collect(toList()), stockModelDto.getPredictDays()));
     }
 }
