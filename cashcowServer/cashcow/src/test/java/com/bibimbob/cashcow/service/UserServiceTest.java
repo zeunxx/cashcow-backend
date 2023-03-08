@@ -5,27 +5,27 @@ import com.bibimbob.cashcow.domain.STATUS;
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
-import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.repository.StockJpaRepository;
 import com.bibimbob.cashcow.repository.UserJpaRepository;
-import com.bibimbob.cashcow.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.test.annotation.Rollback;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertEquals;
@@ -41,6 +41,8 @@ public class UserServiceTest {
     @Autowired UserJpaRepository userJpaRepository;
     @Autowired StockJpaRepository stockJpaRepository;
     @Autowired EntityManager em;
+
+    PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "stockCode"));
 
     @Test
     public void 회원_한명_조회() throws Exception{
@@ -123,10 +125,10 @@ public class UserServiceTest {
 
         //when
         userService.deleteUser(userId);
-        List<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(userId);
+        Page<FavoriteStock> findStockList = stockJpaRepository.findByUserPk(pageRequest,userId);
 
         //then
-        assertEquals(0, findStockList.size());
+        assertEquals(0, findStockList.getTotalElements());
     }
 
     @Test
@@ -146,7 +148,7 @@ public class UserServiceTest {
 //    @Rollback(false)
     public void 즐겨찾기_삭제() throws Exception{
         //given
-        UserStockDto userStockDto = new UserStockDto(6L, "0000");
+        UserStockDto userStockDto = new UserStockDto(37L, "1234");
 
         //when
         Long aLong = userService.removeStock(userStockDto);
@@ -190,7 +192,7 @@ public class UserServiceTest {
     @Test
     public void 즐겨찾기_리스트_get() throws Exception{
         //given
-        List<FavoriteStock> stockList = userService.getStockList(6L);
+        Page<FavoriteStock> stockList = userService.getStockList(pageRequest,37L);
 
         //when
         for (FavoriteStock favoriteStock : stockList) {
@@ -198,10 +200,8 @@ public class UserServiceTest {
         }
 
         //then
-        Assert.assertEquals(2,stockList.size());
+        Assert.assertEquals(14,stockList.getTotalElements());
 
     }
-    /**
-     * 즐겨찾기 없는객체 저장 방지
-     */
+
 }

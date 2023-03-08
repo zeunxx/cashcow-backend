@@ -2,19 +2,20 @@ package com.bibimbob.cashcow.service;
 
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
-import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
-import com.bibimbob.cashcow.dto.UserDto;
+import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.repository.StockJpaRepository;
 
 import com.bibimbob.cashcow.repository.UserJpaRepository;
-import com.bibimbob.cashcow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -146,9 +147,11 @@ public class UserServiceImpl implements UserService{
      *  주식 즐겨찾기 get
      */
     @Override
-    public List<FavoriteStock> getStockList(Long userPk) throws Exception {
+    public Page<FavoriteStock> getStockList(Pageable pageable, Long userPk) throws Exception {
         User user = findOne(userPk);
-        return stockJpaRepository.findByUserPk(user.getId());
+//        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "stockCode"));
+        Page<FavoriteStock> stockList = stockJpaRepository.findByUserPk(pageable, user.getId());
+        return stockList;
     }
 
 

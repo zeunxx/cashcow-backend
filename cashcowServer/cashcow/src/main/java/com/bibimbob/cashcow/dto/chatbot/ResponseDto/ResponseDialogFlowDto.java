@@ -5,18 +5,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DialogFlowResponseDto {
+public class ResponseDialogFlowDto {
 
-    private Optional<String> vocab;
+    private Map<String,String> termsDescription;
     private String fulfillment_text;
     private ChatResponse chatEnum;
 
-    public DialogFlowResponseDto(Optional<String> vocab, String fulfillment_text, String intent) {
-        this.vocab = vocab;
+    public ResponseDialogFlowDto(Map<String,String> termsDescription, String fulfillment_text, String intent) {
+        this.termsDescription = termsDescription;
         this.fulfillment_text = fulfillment_text;
 
         // set ChatEnum

@@ -5,15 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class ResponseStockDto {
-    @ApiModelProperty(value = "주식 코드")
-    @JsonProperty("stock_code")
-    private String stockCode;
+public class ResponsePagingStockDto {
+
+    private List<ResponseStockDto> responseStockDtos;
+    private PageInfo pageInfo;
 }

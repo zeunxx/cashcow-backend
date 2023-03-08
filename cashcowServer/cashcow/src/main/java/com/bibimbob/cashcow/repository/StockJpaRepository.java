@@ -2,6 +2,8 @@ package com.bibimbob.cashcow.repository;
 
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +18,7 @@ public interface StockJpaRepository extends JpaRepository<FavoriteStock, Long> {
 
 
     @Query("select s from FavoriteStock s where s.user.id = :userPk")
-    List<FavoriteStock> findByUserPk(@Param("userPk") long userPk);
+    Page<FavoriteStock> findByUserPk(Pageable pageable, @Param("userPk") long userPk);
 
     void deleteAllByUser(User user);
 }

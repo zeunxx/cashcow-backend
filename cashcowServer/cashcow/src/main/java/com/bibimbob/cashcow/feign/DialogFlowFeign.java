@@ -9,6 +9,8 @@ import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
 import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
+import com.bibimbob.cashcow.dto.stockModel.RequestStockModelDto;
+import com.bibimbob.cashcow.dto.stockModel.ResponseStockModelDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,4 +52,11 @@ public interface DialogFlowFeign {
             @RequestBody RequestLoanDto requestLoanDto
             );
 
+    /**
+     * 주식 모델 값 요청
+     */
+    @PostMapping(path = "/stock-prediction")
+    public ResponseStockModelDto stock_model(
+            @RequestBody RequestStockModelDto requestStockModelDto
+            );
 }

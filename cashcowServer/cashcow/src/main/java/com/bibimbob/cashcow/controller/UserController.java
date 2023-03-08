@@ -1,23 +1,25 @@
 package com.bibimbob.cashcow.controller;
 
-import com.bibimbob.cashcow.Exception.ApiExceptionEntity;
 import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
+import com.bibimbob.cashcow.dto.StockDto.PageInfo;
+import com.bibimbob.cashcow.dto.StockDto.ResponsePagingStockDto;
+
 import com.bibimbob.cashcow.dto.StockDto.ResponseStockDto;
-import com.bibimbob.cashcow.dto.UserDto;
 import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
-import com.bibimbob.cashcow.dto.UserResponseDto.ResponseIdCheckDto;
-import com.bibimbob.cashcow.dto.UserResponseDto.ResponseSaveDto;
-import com.bibimbob.cashcow.repository.UserRepository;
+
+import com.bibimbob.cashcow.dto.User.UserDto;
+import com.bibimbob.cashcow.dto.User.UserRequestDto.DeleteUserDto;
+import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseIdCheckDto;
+import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseSaveDto;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.client.loadbalancer.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,7 +66,7 @@ public class UserController {
      */
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
-    public StatusResponse updateUser(@RequestBody  UserDto userDto, Exception e) throws Exception{
+    public StatusResponse updateUser(@RequestBody UserDto userDto, Exception e) throws Exception{
         // DB에 UPDATE
         userService.updateUser(userDto);
         return new StatusResponse(HttpStatus.OK);
@@ -75,7 +77,6 @@ public class UserController {
      * 아이디 중복 체크
      */
     @ApiOperation(value = "회원가입 아이디 중복 체크", notes = "회원가입시 아이디 중복 여부 확인하는 API입니다.")
-
     @GetMapping("/idCheck")
     public ResponseIdCheckDto idCheck(String userId) throws Exception{
         return new ResponseIdCheckDto(userService.findById(userId));
@@ -86,9 +87,9 @@ public class UserController {
      */
     @ApiOperation(value = "회원 탈퇴", notes = "해당 회원의 정보를 삭제하는 API입니다.")
     @PostMapping("/deleteUser")
-    public StatusResponse deleteUser(@RequestBody long userId) throws Exception{
+    public StatusResponse deleteUser(@RequestBody DeleteUserDto deleteUserDto) throws Exception{
         // DB에 REMOVE
-        userService.deleteUser(userId);
+        userService.deleteUser(deleteUserDto.getUserId());
         return new StatusResponse(HttpStatus.OK);
     }
 
@@ -119,11 +120,14 @@ public class UserController {
      */
     @ApiOperation(value = "회원 주식 즐겨찾기 목록 조회", notes = "해당 회원의 주식 즐겨찾기 목록을 조회하는 API입니다.")
     @GetMapping("/getStock")
-    public ResponseStockDto getStock( Long id) throws Exception{
+    public ResponsePagingStockDto getStock(Pageable pageable, Long id) throws Exception{
 
-        // DB에서 GET
-        List<FavoriteStock> stockList = userService.getStockList(id);
-        return new ResponseStockDto(stockList);
+        // DB에서 get해서 paging
+        PageInfo pageInfo = new PageInfo(pageable.getPageNumber(),
+                userService.getStockList(pageable, id).getTotalElements(),
+                pageable.getPageSize());
+
+        return new ResponsePagingStockDto(userService.getStockList(pageable,id).map(s -> new ResponseStockDto(s.getStockCode())).toList(), pageInfo);
     }
 
 
@@ -135,4 +139,6 @@ public class UserController {
             this.status = status.value();
         }
     }
+
+
 }
