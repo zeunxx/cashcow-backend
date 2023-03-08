@@ -8,10 +8,6 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -30,8 +26,7 @@ public class StockModelController {
                         .stream()
                         .map(s -> Integer.parseInt(s))
                         .collect(toList()), stockModelDto.getPredictDays());
-//        ResponseStockModelDto responseStockModelDto = dialogFlowFeign.stock_model(requestStockModelDto);
-//        return responseStockModelDto;
-        return null;
+        ResponseStockModelDto responseStockModelDto = dialogFlowFeign.stock_model(requestStockModelDto);
+        return responseStockModelDto;
     }
 }
