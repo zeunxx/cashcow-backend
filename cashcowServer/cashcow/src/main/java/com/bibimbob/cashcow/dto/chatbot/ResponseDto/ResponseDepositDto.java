@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseDepositDto {
     @JsonProperty("product_info")
-    private ProductInfo productInfo;
+    private ResponseProductInfo productInfo;
     @JsonProperty("estimated_saving")
     private int estimatedSaving;
 

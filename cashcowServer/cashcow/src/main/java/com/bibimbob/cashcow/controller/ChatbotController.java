@@ -4,11 +4,8 @@ import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDepositDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestSavingDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDialogFlowDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseDepositDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.DialogFlowDto;
+import com.bibimbob.cashcow.dto.chatbot.ResponseDto.*;
 import com.bibimbob.cashcow.dto.chatbot.RequestDto.RequestDto;
-import com.bibimbob.cashcow.dto.chatbot.ResponseDto.ResponseLoanDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.DepositDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.LoanDto;
 import com.bibimbob.cashcow.dto.chatbot.UserAssetsDto.SavingDto;
@@ -23,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = {"챗봇 API"})
@@ -61,9 +58,10 @@ public class ChatbotController {
         RequestDepositDto requestDepositDto = new RequestDepositDto(depositDto.getExpectedPeriod(), depositDto.getSavingAmount(), userDto);
 
         // feign 인터페이스로 POST 요청
-        List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.deposit_products_search(requestDepositDto);
-
-        return new ReturnDto(responseDepositDto);
+        return new ReturnDto(dialogFlowFeign.deposit_products_search(requestDepositDto).stream().map(s -> new ResponseDepositDto(
+                        new ResponseProductInfo(s.getProductInfo()),
+                        s.getEstimatedSaving()))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -80,9 +78,10 @@ public class ChatbotController {
         RequestSavingDto requestSavingDto = new RequestSavingDto(savingDto.getExpectedPeriod(), savingDto.getSavingAmount(), savingDto.getMonthlyPayment(), userDto);
 
         // dialog server POST 요청
-        List<ResponseDepositDto> responseDepositDto = dialogFlowFeign.saving_products_search(requestSavingDto);
-
-        return new ReturnDto(responseDepositDto);
+        return new ReturnDto(dialogFlowFeign.saving_products_search(requestSavingDto).stream().map(s -> new ResponseDepositDto(
+                        new ResponseProductInfo(s.getProductInfo()),
+                        s.getEstimatedSaving()))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -99,9 +98,10 @@ public class ChatbotController {
         RequestLoanDto requestLoanDto = new RequestLoanDto(loanDto.getCreditScore(), loanDto.getLoanAmount(), userDto);
 
         // dialog server POST 요청
-        List<ResponseLoanDto> responseLoanDto = dialogFlowFeign.credit_loan_products_search(requestLoanDto);
-
-        return new ReturnDto(responseLoanDto);
+        return new ReturnDto(dialogFlowFeign.credit_loan_products_search(requestLoanDto).stream()
+                .map(s -> new ResponseLoanDto(
+                        new ResponseLoanProductInfo(s.getLoanProductInfo())))
+                .collect(Collectors.toList()));
     }
 
 

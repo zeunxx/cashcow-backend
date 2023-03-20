@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseLoanDto {
+public class DialogDepositDto {
     @JsonProperty("product_info")
-    private ResponseLoanProductInfo productInfo;
+    private ProductInfo productInfo;
+    @JsonProperty("estimated_saving")
+    private int estimatedSaving;
 
 }
