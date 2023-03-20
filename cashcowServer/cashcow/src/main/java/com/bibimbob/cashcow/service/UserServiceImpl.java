@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements UserService{
 
     private final UserJpaRepository userJpaRepository;
     private final StockJpaRepository stockJpaRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     /**
      * 회원 가입(유저 저장)
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService{
         if (findUser.isPresent()){ // 1개 이상있으면 에러
             throw new IllegalStateException("이미 존재하는 회원입니다");
         }else{ // 없으면 SAVE
+            user.passwordEncode(user.getPassword(), passwordEncoder);
             userJpaRepository.save(user);
         }
 
@@ -67,17 +71,33 @@ public class UserServiceImpl implements UserService{
     public Long updateUser(UserDto userDto) throws Exception {
 
         Optional<User> findUser = userJpaRepository.findByUserId(userDto.getUserId());
+
+
         if(findUser.isPresent()){
-            findUser.get().change(
-                    userDto.getBirth(),
-                    userDto.getPassword(),
-                    userDto.getName(),
-                    userDto.getNickname(),
-                    userDto.getGender(),
-                    userDto.getJob(),
-                    userDto.getStatus(),
-                    userDto.getPhoneNumber(),
-                    userDto.getSalary());
+            if(passwordEncoder.matches(userDto.getPassword(), findUser.get().getPassword())){ // 비밀번호 일치
+                findUser.get().change(
+                        userDto.getBirth(),
+                        userDto.getName(),
+                        userDto.getNickname(),
+                        userDto.getGender(),
+                        userDto.getJob(),
+                        userDto.getStatus(),
+                        userDto.getPhoneNumber(),
+                        userDto.getSalary());
+
+            }else{ // 비밀번호 불일치 => 비밀번호 변경 포함!
+                findUser.get().changeWithPassword(
+                        userDto.getBirth(),
+                        findUser.get().passwordEncode(userDto.getPassword(),passwordEncoder),
+                        userDto.getName(),
+                        userDto.getNickname(),
+                        userDto.getGender(),
+                        userDto.getJob(),
+                        userDto.getStatus(),
+                        userDto.getPhoneNumber(),
+                        userDto.getSalary());
+
+            }
         }
 
         return findUser.get().getId();
