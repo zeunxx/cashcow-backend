@@ -8,6 +8,7 @@ import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.repository.StockJpaRepository;
 import com.bibimbob.cashcow.repository.UserJpaRepository;
+import org.hibernate.type.TrueFalseType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,27 +44,29 @@ public class UserServiceTest {
     @Autowired UserJpaRepository userJpaRepository;
     @Autowired StockJpaRepository stockJpaRepository;
     @Autowired EntityManager em;
+    @Autowired PasswordEncoder passwordEncoder;
 
     PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "stockCode"));
 
     @Test
     public void 회원_한명_조회() throws Exception{
         //given
-        Long userId = 6L;
+        Long userId = 70L;
 
         //when
         User user = userService.findOne(userId);
 
         //then
         System.out.println(user.getName());
-        Assert.assertEquals(6,user.getId());
+        System.out.println("user.getPassword() = " + user.getPassword());
+        Assert.assertEquals(70,user.getId());
     }
 
     @Test
 //    @Rollback(false)
     public void 회원_가입() throws Exception{
         //given
-        UserDto userDto = new UserDto("1234","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
+        UserDto userDto = new UserDto("0329-2","이름","0329-2","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
 
         User user = userDto.toEntity();
 
@@ -76,16 +81,34 @@ public class UserServiceTest {
 
     @Test
 //    @Rollback(false)
+    public void 회원_비밀번호_수정() throws Exception{
+        //given
+        String newPass = "newPw";
+        long userId = 91L;
+        //when
+        Long assetId = userService.updatePw(userId, newPass);
+        User findUser = userService.findOne(userId);
+
+        String findPassword = findUser.getPassword();
+
+        //then
+        boolean result = passwordEncoder.matches(newPass, findPassword);
+        Assert.assertEquals(true, result);
+    }
+
+    @Test
+//    @Rollback(false)
     public void 회원수정() throws Exception{
         //given
-        UserDto userDto = new UserDto("testetse","이름 변경","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
+        UserDto userDto = new UserDto("testetse","이름 변경@@@","newnewnew","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
 
 
         //when
         Long assetId = userService.updateUser(userDto);
 
         //then
-        Assert.assertEquals("이름 변경", userService.findOne(assetId).getName());
+
+        Assert.assertEquals("이름 변경@@@", userService.findOne(assetId).getName());
     }
     
     @Test(expected = IllegalStateException.class)
@@ -203,5 +226,24 @@ public class UserServiceTest {
         Assert.assertEquals(14,stockList.getTotalElements());
 
     }
+
+    @Test
+    @Rollback(false)
+    public void 비밀번호암호화_회원가입() throws Exception{
+        //given
+        UserDto userDto = new UserDto("1234","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
+
+        User user = userDto.toEntity();
+
+        //when
+        Long savedId = userService.save(user);
+
+
+        //then
+        Assert.assertEquals("유저를 저장하면 저장된 회원과 입력한 회원이 일치해야 함",user,userService.findOne(savedId));
+
+    }
+
+
 
 }

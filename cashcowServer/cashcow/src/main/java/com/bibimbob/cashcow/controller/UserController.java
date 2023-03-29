@@ -1,6 +1,5 @@
 package com.bibimbob.cashcow.controller;
 
-import com.bibimbob.cashcow.domain.Stock.FavoriteStock;
 import com.bibimbob.cashcow.domain.User;
 import com.bibimbob.cashcow.dto.StockDto.PageInfo;
 import com.bibimbob.cashcow.dto.StockDto.ResponsePagingStockDto;
@@ -10,19 +9,22 @@ import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 
 import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.User.UserRequestDto.DeleteUserDto;
-import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseIdCheckDto;
+import com.bibimbob.cashcow.dto.User.UserRequestDto.RequestPwMatchDto;
+import com.bibimbob.cashcow.dto.User.UserRequestDto.RequestUpdatePwDto;
+import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseCheckDto;
+import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponsePwMatchDto;
 import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseSaveDto;
+import com.bibimbob.cashcow.repository.UserJpaRepository;
 import com.bibimbob.cashcow.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -32,6 +34,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserJpaRepository userJpaRepository;
 
     /**
      * 회원가입 (회원 DB에 SAVE)
@@ -62,7 +65,7 @@ public class UserController {
 
 
     /**
-     * 유저 정보 update
+     * 유저 정보 update (비밀번호 제외)
      */
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
@@ -72,14 +75,44 @@ public class UserController {
         return new StatusResponse(HttpStatus.OK);
     }
 
+    /**
+     * 비밀번호 update
+     */
+    @ApiOperation(value = "회원 비밀번호 업데이트", notes = "해당 회원의 비밀번호를 수정하는 API입니다.")
+    @PostMapping("/updateUserPw")
+    public StatusResponse updateUserPw(@RequestBody RequestUpdatePwDto requestUpdatePwDto) throws Exception{
+        // DB에 UPDATE
+        userService.updatePw(requestUpdatePwDto.getId(), requestUpdatePwDto.getUserPass());
+        return new StatusResponse(HttpStatus.OK);
+    }
+
 
     /**
      * 아이디 중복 체크
      */
     @ApiOperation(value = "회원가입 아이디 중복 체크", notes = "회원가입시 아이디 중복 여부 확인하는 API입니다.")
     @GetMapping("/idCheck")
-    public ResponseIdCheckDto idCheck(String userId) throws Exception{
-        return new ResponseIdCheckDto(userService.findById(userId));
+    public ResponseCheckDto idCheck(String userId) throws Exception{
+        return new ResponseCheckDto(userService.findById(userId));
+    }
+
+    /**
+    * 로그인 용 비밀번호 매칭
+     */
+    @ApiOperation(value = "비밀번호 매치", notes = "로그인시 비밀번호 확인하는 API입니다.")
+    @PostMapping("/passwordMatch")
+    public ResponsePwMatchDto passwordMatch(@RequestBody RequestPwMatchDto requestPwMatchDto) throws Exception{
+
+        Optional<User> findUser = userJpaRepository.findByUserId(requestPwMatchDto.getUserId());
+
+        if(findUser.isPresent()){
+            // 비밀번호 매치
+            boolean result = userService.passwordMatch(requestPwMatchDto.getUserId(), requestPwMatchDto.getUserPass());
+            return new ResponsePwMatchDto(true,findUser.get().getId(),result);
+        }else{
+            return new ResponsePwMatchDto(false,0,false);
+        }
+
     }
 
     /**
