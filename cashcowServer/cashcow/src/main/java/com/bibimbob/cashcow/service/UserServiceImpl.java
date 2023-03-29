@@ -126,6 +126,18 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
+     * 비밀번호 match
+     */
+    @Override
+    public boolean passwordMatch(String userId, String userPassword) throws Exception {
+        Optional<User> findUser = userJpaRepository.findByUserId(userId);
+        if (findUser.isPresent()){
+            return passwordEncoder.matches(userPassword, findUser.get().getPassword());
+        }
+        return false;
+    }
+
+    /**
      * 주식 즐겨찾기 save
      */
     @Override

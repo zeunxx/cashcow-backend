@@ -25,4 +25,6 @@ public interface UserService {
     int findById(String userId) throws Exception;
 
     void deleteUser(long userId)  throws Exception;
+
+    boolean passwordMatch(String userId, String userPassword) throws Exception;
 }

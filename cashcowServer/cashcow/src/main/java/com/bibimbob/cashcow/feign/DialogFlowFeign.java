@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="DialogFlowFeign", url="http://3.34.126.229:7000")
+@FeignClient(name="DialogFlowFeign", url="http://203.252.157.78:8080")
 public interface DialogFlowFeign {
 
     /**
