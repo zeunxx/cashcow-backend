@@ -63,10 +63,10 @@ public class UserServiceTest {
     }
 
     @Test
-    @Rollback(false)
+//    @Rollback(false)
     public void 회원_가입() throws Exception{
         //given
-        UserDto userDto = new UserDto("1234","이름","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
+        UserDto userDto = new UserDto("0329-2","이름","0329-2","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
 
         User user = userDto.toEntity();
 
@@ -81,16 +81,34 @@ public class UserServiceTest {
 
     @Test
 //    @Rollback(false)
+    public void 회원_비밀번호_수정() throws Exception{
+        //given
+        String newPass = "newPw";
+        long userId = 91L;
+        //when
+        Long assetId = userService.updatePw(userId, newPass);
+        User findUser = userService.findOne(userId);
+
+        String findPassword = findUser.getPassword();
+
+        //then
+        boolean result = passwordEncoder.matches(newPass, findPassword);
+        Assert.assertEquals(true, result);
+    }
+
+    @Test
+//    @Rollback(false)
     public void 회원수정() throws Exception{
         //given
-        UserDto userDto = new UserDto("testetse","이름 변경","변경된 비밀번호","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
+        UserDto userDto = new UserDto("testetse","이름 변경@@@","newnewnew","변경된 별명", GENDER.FEMALE, "student", STATUS.ACTIVE,null ,null, "00", LocalDate.of(1999, 10, 9), 3000L);
 
 
         //when
         Long assetId = userService.updateUser(userDto);
 
         //then
-        Assert.assertEquals("이름 변경", userService.findOne(assetId).getName());
+
+        Assert.assertEquals("이름 변경@@@", userService.findOne(assetId).getName());
     }
     
     @Test(expected = IllegalStateException.class)
@@ -226,32 +244,6 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    @Rollback(false)
-    public void 비밀번호암호화_회원수정_비밀번호변경() throws Exception{
-        //given
-        UserDto userDto = new UserDto("1234","이름2","3635","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
 
-        //when
-        Long assetId = userService.updateUser(userDto);
-
-        //then
-        boolean result = passwordEncoder.matches(userDto.getPassword(), userService.findOne(assetId).getPassword());
-        Assert.assertEquals(true, result);
-    }
-
-    @Test
-    @Rollback(false)
-    public void 비밀번호암호화_회원수정_비밀번호변경x() throws Exception{
-        //given
-        UserDto userDto = new UserDto("1234","이름2","1234","별명",GENDER.FEMALE,"student", STATUS.ACTIVE,null,null,"00",LocalDate.of(1999, 10, 9),3000L);
-
-        //when
-        Long assetId = userService.updateUser(userDto);
-
-        //then
-        boolean result = passwordEncoder.matches(userDto.getPassword(), userService.findOne(assetId).getPassword());
-        Assert.assertEquals(true, result);
-    }
 
 }

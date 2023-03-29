@@ -27,4 +27,6 @@ public interface UserService {
     void deleteUser(long userId)  throws Exception;
 
     boolean passwordMatch(String userId, String userPassword) throws Exception;
+
+    public Long updatePw(long id, String password) throws Exception;
 }

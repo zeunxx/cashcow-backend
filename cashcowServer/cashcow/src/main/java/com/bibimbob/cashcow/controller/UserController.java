@@ -10,6 +10,7 @@ import com.bibimbob.cashcow.dto.StockDto.UserStockDto;
 import com.bibimbob.cashcow.dto.User.UserDto;
 import com.bibimbob.cashcow.dto.User.UserRequestDto.DeleteUserDto;
 import com.bibimbob.cashcow.dto.User.UserRequestDto.RequestPwMatchDto;
+import com.bibimbob.cashcow.dto.User.UserRequestDto.RequestUpdatePwDto;
 import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseCheckDto;
 import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponsePwMatchDto;
 import com.bibimbob.cashcow.dto.User.UserResponseDto.ResponseSaveDto;
@@ -64,13 +65,24 @@ public class UserController {
 
 
     /**
-     * 유저 정보 update
+     * 유저 정보 update (비밀번호 제외)
      */
     @ApiOperation(value = "회원 정보 업데이트", notes = "해당 회원의 정보를 수정하는 API입니다.")
     @PostMapping("/updateUser")
     public StatusResponse updateUser(@RequestBody UserDto userDto, Exception e) throws Exception{
         // DB에 UPDATE
         userService.updateUser(userDto);
+        return new StatusResponse(HttpStatus.OK);
+    }
+
+    /**
+     * 비밀번호 update
+     */
+    @ApiOperation(value = "회원 비밀번호 업데이트", notes = "해당 회원의 비밀번호를 수정하는 API입니다.")
+    @PostMapping("/updateUserPw")
+    public StatusResponse updateUserPw(@RequestBody RequestUpdatePwDto requestUpdatePwDto) throws Exception{
+        // DB에 UPDATE
+        userService.updatePw(requestUpdatePwDto.getId(), requestUpdatePwDto.getUserPass());
         return new StatusResponse(HttpStatus.OK);
     }
 
@@ -88,9 +100,11 @@ public class UserController {
     * 로그인 용 비밀번호 매칭
      */
     @ApiOperation(value = "비밀번호 매치", notes = "로그인시 비밀번호 확인하는 API입니다.")
-    @GetMapping("/passwordMatch")
-    public ResponsePwMatchDto passwordMatch(RequestPwMatchDto requestPwMatchDto) throws Exception{
+    @PostMapping("/passwordMatch")
+    public ResponsePwMatchDto passwordMatch(@RequestBody RequestPwMatchDto requestPwMatchDto) throws Exception{
+
         Optional<User> findUser = userJpaRepository.findByUserId(requestPwMatchDto.getUserId());
+
         if(findUser.isPresent()){
             // 비밀번호 매치
             boolean result = userService.passwordMatch(requestPwMatchDto.getUserId(), requestPwMatchDto.getUserPass());
@@ -98,6 +112,7 @@ public class UserController {
         }else{
             return new ResponsePwMatchDto(false,0,false);
         }
+
     }
 
     /**

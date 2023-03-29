@@ -72,9 +72,7 @@ public class UserServiceImpl implements UserService{
 
         Optional<User> findUser = userJpaRepository.findByUserId(userDto.getUserId());
 
-
         if(findUser.isPresent()){
-            if(passwordEncoder.matches(userDto.getPassword(), findUser.get().getPassword())){ // 비밀번호 일치
                 findUser.get().change(
                         userDto.getBirth(),
                         userDto.getName(),
@@ -84,20 +82,6 @@ public class UserServiceImpl implements UserService{
                         userDto.getStatus(),
                         userDto.getPhoneNumber(),
                         userDto.getSalary());
-
-            }else{ // 비밀번호 불일치 => 비밀번호 변경 포함!
-                findUser.get().changeWithPassword(
-                        userDto.getBirth(),
-                        findUser.get().passwordEncode(userDto.getPassword(),passwordEncoder),
-                        userDto.getName(),
-                        userDto.getNickname(),
-                        userDto.getGender(),
-                        userDto.getJob(),
-                        userDto.getStatus(),
-                        userDto.getPhoneNumber(),
-                        userDto.getSalary());
-
-            }
         }
 
         return findUser.get().getId();
@@ -135,6 +119,16 @@ public class UserServiceImpl implements UserService{
             return passwordEncoder.matches(userPassword, findUser.get().getPassword());
         }
         return false;
+    }
+
+    /**
+     * 비밀번호 update
+     */
+    @Override
+    public Long updatePw(long id,String password) throws Exception {
+        User findUser = findOne(id);
+        findUser.changePassword(findUser.passwordEncode(password, passwordEncoder));
+        return findUser.getId();
     }
 
     /**
