@@ -1,5 +1,9 @@
 # cashcow-backend
 주식 + 자산 관리+ 금융 챗봇 앱
+
+https://kaput-kite-949.notion.site/cfdbc53a14914fd48c4d018fcfe5f84e?pvs=4
+
+
 ## 프로젝트 소개
 자산 관리 및 금융에 대한 지식이 부족한 저년층 대상으로 편리한 금융 정보 전달을 목표로 하는 프로젝트입니다.
 ## 개발 기간
