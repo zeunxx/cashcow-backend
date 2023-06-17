@@ -1,6 +1,8 @@
 # cashcow-backend
 주식 + 자산 관리+ 금융 챗봇 앱
 
+- 노션 페이지
+  
 https://kaput-kite-949.notion.site/cfdbc53a14914fd48c4d018fcfe5f84e?pvs=4
 
 
@@ -19,4 +21,5 @@ https://kaput-kite-949.notion.site/cfdbc53a14914fd48c4d018fcfe5f84e?pvs=4
 - MySQL
 
 ## API Document
-https://www.notion.so/API-Document-a113b0fad5c2473f94149c5f0857e6f3?pvs=4 
+
+https://kaput-kite-949.notion.site/API-Document-a113b0fad5c2473f94149c5f0857e6f3?pvs=4
